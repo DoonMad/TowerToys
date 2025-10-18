@@ -3,16 +3,14 @@
 
 #include <QObject>
 #include <QString>
-#include <QSharedDataPointer>
+#include <QSharedPointer>
 #include "action.h"
 
 class Macro : public QObject
 {
     Q_OBJECT
 public:
-    QString name;
-    QString shortcut;
-    QString appContext; // Eg: "chrome.exe", "vscode.exe", "" for universal
+    QString name, shortcut, appContext; // Eg: "chrome.exe", "vscode.exe", "" for universal
     QList<QSharedPointer<Action>> actions;
 
     explicit Macro(QObject *parent = nullptr);

@@ -11,15 +11,16 @@ class MacroManager : public QObject
 public:
     explicit MacroManager(QObject *parent = nullptr);
 
-    void addMacro(const Macro &macro);
-    void triggerShortcut(const QString &shortcut, const QString &activeApp);
+    void addMacro(QSharedPointer<Macro> macro);
+    void removeMacro(QSharedPointer<Macro> macro);
 
 signals:
-    void macroAdded(const QString &name);
-    void macroExecuted(const QString &name);
+    void macroAdded(QSharedPointer<Macro> macro);
+    void macroRemoved(QSharedPointer<Macro> macro);
+    void macroEdited(QSharedPointer<Macro> macro);
 
 private:
-    QList<Macro> macros;
+    QList<QSharedPointer<Macro>> macros;
 };
 
 #endif // MACROMANAGER_H

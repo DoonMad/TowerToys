@@ -5,6 +5,7 @@
 #include "MacroManager/macromanager.h"
 #include "MacroManager/macro.h"
 #include "AppController/appcontroller.h"
+#include <QSharedPointer>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -16,16 +17,15 @@ MainWindow::MainWindow(QWidget *parent)
     controller->start();
 
     MacroManager *manager = new MacroManager(this);
-    connect(manager, &MacroManager::macroAdded, this, [=](QString name){
-        ui->listWidget->addItem(name);
+    connect(manager, &MacroManager::macroAdded, this, [=](QSharedPointer<Macro> macro){
+        ui->listWidget->addItem(macro->name);
     });
 
     connect(ui->addMacroButton, &QPushButton::clicked, this, [=](){
-        Macro *macro = new Macro(this);
+        QSharedPointer<Macro> macro = QSharedPointer<Macro>::create();
         macro->name = ui->lineEdit->text();
-
         if(!macro->name.isEmpty()){
-            manager->addMacro(*macro);
+            manager->addMacro(macro);
         }
     });
 

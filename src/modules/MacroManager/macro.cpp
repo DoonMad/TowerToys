@@ -1,4 +1,4 @@
-#include "macro.h"
+#include "MacroManager/macro.h"
 #include "Actions/action.h"
 
 Macro::Macro(QObject *parent)
