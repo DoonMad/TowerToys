@@ -38,6 +38,8 @@ find_package(Qt6 REQUIRED COMPONENTS Core)
         src/modules/modulemanager.h src/modules/modulemanager.cpp
         src/modules/MacroManager/macromanagerwidget.h src/modules/MacroManager/macromanagerwidget.cpp src/modules/MacroManager/macromanagerwidget.ui
         src/modules/MacroManager/addactiondialog.h src/modules/MacroManager/addactiondialog.cpp src/modules/MacroManager/addactiondialog.ui
+        src/core/Actions/openurlaction.h src/core/Actions/openurlaction.cpp
+        src/core/Actions/typekeystrokeaction.h src/core/Actions/typekeystrokeaction.cpp
 
 
     )

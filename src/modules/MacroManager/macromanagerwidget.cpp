@@ -26,6 +26,8 @@ void MacroManagerWidget::onMacroAdded(QSharedPointer<Macro> macro)
     QListWidgetItem* item = new QListWidgetItem(macro->name, ui->macroListWidget);
 
     // This is the key: store the actual pointer inside the UI item
+    // QVariant is like a box which can store anything. We want to store the shared pointer, but the function doesn't know that.
+    // That's why it accepts QVariant, which is like a universal box in which we can store anything and pass inside setData();
     item->setData(Qt::UserRole, QVariant::fromValue(macro));
 
     ui->macroListWidget->setCurrentItem(item);
@@ -34,7 +36,7 @@ void MacroManagerWidget::onMacroAdded(QSharedPointer<Macro> macro)
 void MacroManagerWidget::on_addMacroButton_clicked()
 {
     QSharedPointer<Macro> macro = QSharedPointer<Macro>::create();
-    macro->name = "New Macro"; // Give it a default name
+    macro->name = "New Macro"; // default name
 
     // Tell the manager to add it. The manager will emit `macroAdded`,
     // which our `onMacroAdded` slot will catch, updating the UI.
@@ -73,11 +75,11 @@ void MacroManagerWidget::on_addActionButton_clicked()
     if (dialog.exec() == QDialog::Accepted)
     {
         // --- TODO: Implement getAction() in AddActionDialog ---
-        // QSharedPointer<Action> newAction = dialog.getAction();
-        // if (newAction) {
-        //     currentMacro->addAction(newAction);
-        //     updateActionList(); // Refresh the list
-        // }
+        QSharedPointer<Action> newAction = dialog.getAction();
+        if (newAction) {
+            currentMacro->addAction(newAction);
+            updateActionList(); // Refresh the list
+        }
     }
 }
 
@@ -93,7 +95,7 @@ void MacroManagerWidget::on_removeMacroButton_clicked()
     // TODO: Implement this
     // 1. Get current item
     // 2. Get QSharedPointer<Macro> from its data
-    // 3. Call m_manager->removeMacro(macro)
+    // 3. Call manager->removeMacro(macro)
     // 4. Implement the onMacroRemoved slot to remove item from list
 }
 
