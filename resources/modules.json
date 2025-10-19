@@ -1,0 +1,22 @@
+{
+  "modules": [
+    {
+      "name": "Macro Manager",
+      "description": "Automate repetitive tasks with custom keyboard shortcuts.",
+      "icon": ":/resources/icons/macro.png",
+      "widget": "MacroManagerWidget"
+    },
+    {
+      "name": "File Share",
+      "description": "Quickly share files between devices on your network.",
+      "icon": ":/resources/icons/share.png",
+      "widget": "FileShareWidget"
+    },
+    {
+      "name": "Clipboard Manager",
+      "description": "Access your clipboard history and manage copied items.",
+      "icon": ":/resources/icons/clipboard.png",
+      "widget": "ClipboardWidget"
+    }
+  ]
+}

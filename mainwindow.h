@@ -3,6 +3,13 @@
 
 #include <QMainWindow>
 #include <AppController/appcontroller.h>
+#include <MacroManager/macromanager.h>
+#include <QHash>
+#include <QString>
+#include <moduleinfo.h>
+#include <QWidget>
+#include <modulemanager.h>
+#include <QStackedWidget>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -20,11 +27,19 @@ public:
 
 
 private slots:
-    void on_pushButton_clicked();
-    // void on_addMacroButton_clicked();
+
 
 private:
     Ui::MainWindow *ui;
     AppController *controller;
+    MacroManager *macroManager;
+    ModuleManager *moduleManager;
+    QHash<QString, ModuleInfo> moduleInfoMap;
+    QHash<QString, QWidget*> loadedWidgets;
+    QStackedWidget *stackWidget;
+
+    void onModuleButtonClicked(const QString& moduleName);
+    QWidget* createWidgetForModule(const QString& moduleName);
+    void setupDynamicUI();
 };
 #endif // MAINWINDOW_H

@@ -23,6 +23,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     find_package(Qt6 REQUIRED COMPONENTS Core)
 find_package(Qt6 REQUIRED COMPONENTS Core)
 find_package(Qt6 REQUIRED COMPONENTS Core)
+find_package(Qt6 REQUIRED COMPONENTS Core)
 
     qt_add_executable(ShowerToys
         MANUAL_FINALIZATION
@@ -33,6 +34,9 @@ find_package(Qt6 REQUIRED COMPONENTS Core)
         src/core/Actions/action.h
         src/core/Actions/openappaction.h src/core/Actions/openappaction.cpp
         src/modules/MacroManager/macro.h src/modules/MacroManager/macro.cpp
+        src/modules/moduleinfo.h
+        src/modules/modulemanager.h src/modules/modulemanager.cpp
+        src/modules/MacroManager/macromanagerwidget.h src/modules/MacroManager/macromanagerwidget.cpp src/modules/MacroManager/macromanagerwidget.ui
 
     )
 # Define target properties for Android with Qt 6 as:
@@ -54,6 +58,7 @@ else()
 endif()
 
 target_link_libraries(ShowerToys PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(ShowerToys PRIVATE Qt6::Core)
 target_link_libraries(ShowerToys PRIVATE Qt6::Core)
 target_link_libraries(ShowerToys PRIVATE Qt6::Core)
 target_link_libraries(ShowerToys PRIVATE Qt6::Core)

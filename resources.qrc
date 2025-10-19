@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>resources/icons/app_icon.png</file>
+        <file>resources/modules.json</file>
     </qresource>
 </RCC>
