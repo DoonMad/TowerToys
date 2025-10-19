@@ -37,6 +37,8 @@ find_package(Qt6 REQUIRED COMPONENTS Core)
         src/modules/moduleinfo.h
         src/modules/modulemanager.h src/modules/modulemanager.cpp
         src/modules/MacroManager/macromanagerwidget.h src/modules/MacroManager/macromanagerwidget.cpp src/modules/MacroManager/macromanagerwidget.ui
+        src/modules/MacroManager/addactiondialog.h src/modules/MacroManager/addactiondialog.cpp src/modules/MacroManager/addactiondialog.ui
+
 
     )
 # Define target properties for Android with Qt 6 as:

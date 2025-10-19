@@ -13,6 +13,7 @@
 #include "modulemanager.h"
 #include <QHash>
 #include <QString>
+#include <MacroManager/macromanagerwidget.h>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -26,6 +27,8 @@ MainWindow::MainWindow(QWidget *parent)
     macroManager = new MacroManager(this);
     moduleManager = new ModuleManager(this);
     moduleInfoMap = moduleManager->loadModules();
+
+    setupDynamicUI();
 
 
     // MacroManager *manager = new MacroManager(this);
