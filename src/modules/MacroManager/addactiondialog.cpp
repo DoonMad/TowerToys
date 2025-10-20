@@ -13,6 +13,7 @@ AddActionDialog::AddActionDialog(QWidget *parent)
 
     ui->actionTypeCombo->addItems({"Open App", "Open URL", "Type Keystroke"});
     connect(ui->actionTypeCombo, QOverload<int>::of(&QComboBox::currentIndexChanged), ui->stackedWidget, &QStackedWidget::setCurrentIndex);
+    ui->stackedWidget->setCurrentIndex(0);
 }
 
 QSharedPointer<Action> AddActionDialog::getAction() const
