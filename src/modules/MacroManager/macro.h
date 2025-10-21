@@ -16,6 +16,7 @@ public:
     explicit Macro(QObject *parent = nullptr);
 
     void addAction(QSharedPointer<Action> action);
+    void removeAction(QSharedPointer<Action> action);
     void execute();
 
 signals:

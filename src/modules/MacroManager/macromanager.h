@@ -11,13 +11,14 @@ class MacroManager : public QObject
 public:
     explicit MacroManager(QObject *parent = nullptr);
 
-    void addMacro(QSharedPointer<Macro> macro);
-    void removeMacro(QSharedPointer<Macro> macro);
-
 signals:
     void macroAdded(QSharedPointer<Macro> macro);
     void macroRemoved(QSharedPointer<Macro> macro);
     void macroEdited(QSharedPointer<Macro> macro);
+
+public slots:
+    void addMacro(QSharedPointer<Macro> macro);
+    void removeMacro(QSharedPointer<Macro> macro);
 
 private:
     QList<QSharedPointer<Macro>> macros;

@@ -29,7 +29,7 @@ private:
 
 private slots:
     void onMacroAdded(QSharedPointer<Macro> macro);
-    // void onMacroRemoved(QSharedPointer<Macro> macro);
+    void onMacroRemoved(QSharedPointer<Macro> macro);
 
     void on_addMacroButton_clicked();
     void on_macroListWidget_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);

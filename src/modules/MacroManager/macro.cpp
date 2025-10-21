@@ -12,4 +12,11 @@ void Macro::addAction(QSharedPointer<Action> action) {
 void Macro::execute() {
     for (auto &a : actions)
         a->execute();
+
+    emit executed();
+}
+
+void Macro::removeAction(QSharedPointer<Action> action)
+{
+    actions.removeOne(action);
 }

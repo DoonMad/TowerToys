@@ -17,6 +17,7 @@ MacroManagerWidget::MacroManagerWidget(MacroManager* manager, const ModuleInfo& 
     ui->descriptionLabel->setText(info.description);
 
     connect(manager, &MacroManager::macroAdded, this, &MacroManagerWidget::onMacroAdded);
+    connect(manager, &MacroManager::macroRemoved, this, &MacroManagerWidget::onMacroRemoved);
 
     ui->rightPanel->setEnabled(false);
 }
@@ -97,6 +98,19 @@ void MacroManagerWidget::on_removeMacroButton_clicked()
     // 2. Get QSharedPointer<Macro> from its data
     // 3. Call manager->removeMacro(macro)
     // 4. Implement the onMacroRemoved slot to remove item from list
+
+    QListWidgetItem* currentItem = ui->macroListWidget->currentItem();
+    if (!currentItem) return; // Nothing selected
+
+    // Get the macro pointer from the item
+    QSharedPointer<Macro> macro = currentItem->data(Qt::UserRole).value<QSharedPointer<Macro>>();
+
+    if (macro) {
+        // Tell the manager to remove it. The manager will
+        // emit macroRemoved, which our onMacroRemoved slot
+        // will catch, updating the UI.
+        manager->removeMacro(macro);
+    }
 }
 
 void MacroManagerWidget::on_removeActionButton_clicked()
@@ -105,6 +119,35 @@ void MacroManagerWidget::on_removeActionButton_clicked()
     // 1. Get selected action from ui->actionListWidget
     // 2. Remove it from currentMacro->actions
     // 3. Remove it from the ui->actionListWidget
+
+    if (!currentMacro) return;
+
+    int currentRow = ui->actionListWidget->currentRow();
+    if (currentRow < 0) return;
+
+    QListWidgetItem* item = ui->actionListWidget->item(currentRow);
+    QSharedPointer<Action> action = item->data(Qt::UserRole).value<QSharedPointer<Action>>();
+
+    if (action) {
+        currentMacro->removeAction(action);
+        delete ui->actionListWidget->takeItem(currentRow);
+    }
+}
+
+void MacroManagerWidget::onMacroRemoved(QSharedPointer<Macro> macro)
+{
+    // Find the item in the list that matches this macro pointer
+    for (int i = 0; i < ui->macroListWidget->count(); ++i)
+    {
+        QListWidgetItem* item = ui->macroListWidget->item(i);
+        QSharedPointer<Macro> itemMacro = item->data(Qt::UserRole).value<QSharedPointer<Macro>>();
+
+        if (itemMacro == macro) {
+            // found it. Remove it from the list and delete it.
+            delete ui->macroListWidget->takeItem(i);
+            break;
+        }
+    }
 }
 
 
@@ -132,9 +175,12 @@ void MacroManagerWidget::updateActionList()
     ui->actionListWidget->clear();
     if (currentMacro) {
         for (const auto& action : currentMacro->actions) {
-            ui->actionListWidget->addItem(action->description());
+            // ui->actionListWidget->addItem(action->description());
             // We'll also need to store the Action pointer in this list's items
             // to make 'remove' work later.
+            QListWidgetItem* item = new QListWidgetItem(action->description());
+            item->setData(Qt::UserRole, QVariant::fromValue(action));
+            ui->actionListWidget->addItem(item);
         }
     }
 }
