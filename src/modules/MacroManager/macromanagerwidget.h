@@ -34,10 +34,13 @@ private slots:
     void on_addMacroButton_clicked();
     void on_macroListWidget_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);
     void on_macroNameEdit_textChanged(const QString &text);
+    void on_macroHotkeyEdit_keySequenceChanged(const QKeySequence &keySequence);
     void on_addActionButton_clicked();
     void on_executeMacroButton_clicked();
     void on_removeMacroButton_clicked();
     void on_removeActionButton_clicked();
+
+    void onHotkeyStatus(QString macroName, bool success, QString message);
 
 };
 

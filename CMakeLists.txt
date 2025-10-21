@@ -19,11 +19,31 @@ set(PROJECT_SOURCES
         mainwindow.ui
 )
 
+file(GLOB QHOTKEY_SOURCES
+    "lib/QHotkey/qhotkey.h"
+    "lib/QHotkey/qhotkey.cpp"
+    "lib/QHotkey/qhotkey_p.h"
+)
+
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    file(GLOB QHOTKEY_SOURCES ${QHOTKEY_SOURCES}
+        "lib/QHotkey/qhotkey_win.h"
+        "lib/QHotkey/qhotkey_win.cpp"
+    )
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin") # Darwin is the name for macOS
+    file(GLOB QHOTKEY_SOURCES ${QHOTKEY_SOURCES}
+        "lib/QHotkey/qhotkey_mac.h"
+        "lib/QHotkey/qhotkey_mac.mm" # Note: .mm, not .cpp
+    )
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    file(GLOB QHOTKEY_SOURCES ${QHOTKEY_SOURCES}
+        "lib/QHotkey/qhotkey_x11.h"
+        "lib/QHotkey/qhotkey_x11.cpp"
+    )
+endif()
+
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     find_package(Qt6 REQUIRED COMPONENTS Core)
-find_package(Qt6 REQUIRED COMPONENTS Core)
-find_package(Qt6 REQUIRED COMPONENTS Core)
-find_package(Qt6 REQUIRED COMPONENTS Core)
 
     qt_add_executable(ShowerToys
         MANUAL_FINALIZATION
@@ -40,7 +60,8 @@ find_package(Qt6 REQUIRED COMPONENTS Core)
         src/modules/MacroManager/addactiondialog.h src/modules/MacroManager/addactiondialog.cpp src/modules/MacroManager/addactiondialog.ui
         src/core/Actions/openurlaction.h src/core/Actions/openurlaction.cpp
         src/core/Actions/typekeystrokeaction.h src/core/Actions/typekeystrokeaction.cpp
-
+        src/core/HotkeyManager/hotkeymanager.h src/core/HotkeyManager/hotkeymanager.cpp
+        ${QHOTKEY_SOURCES}
 
     )
 # Define target properties for Android with Qt 6 as:
@@ -61,11 +82,14 @@ else()
     endif()
 endif()
 
-target_link_libraries(ShowerToys PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
-target_link_libraries(ShowerToys PRIVATE Qt6::Core)
-target_link_libraries(ShowerToys PRIVATE Qt6::Core)
-target_link_libraries(ShowerToys PRIVATE Qt6::Core)
-target_link_libraries(ShowerToys PRIVATE Qt6::Core)
+target_include_directories(ShowerToys PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}/lib/QHotkey"
+)
+
+target_link_libraries(ShowerToys PRIVATE
+    Qt${QT_VERSION_MAJOR}::Widgets
+    Qt6::Core
+)
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an

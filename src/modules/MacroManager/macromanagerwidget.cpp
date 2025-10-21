@@ -18,8 +18,24 @@ MacroManagerWidget::MacroManagerWidget(MacroManager* manager, const ModuleInfo& 
 
     connect(manager, &MacroManager::macroAdded, this, &MacroManagerWidget::onMacroAdded);
     connect(manager, &MacroManager::macroRemoved, this, &MacroManagerWidget::onMacroRemoved);
+    connect(manager, &MacroManager::hotkeyStatus, this, &MacroManagerWidget::onHotkeyStatus);
 
     ui->rightPanel->setEnabled(false);
+}
+
+void MacroManagerWidget::onHotkeyStatus(QString macroName, bool success, QString message)
+{
+    // Only show status for the macro we are currently editing
+    if (currentMacro && currentMacro->name == macroName) {
+        ui->hotkeyErrorLabel->setText(message);
+
+        // Set the label color (red for error, green for success)
+        if (success) {
+            ui->hotkeyErrorLabel->setStyleSheet("color: green;");
+        } else {
+            ui->hotkeyErrorLabel->setStyleSheet("color: red;");
+        }
+    }
 }
 
 void MacroManagerWidget::onMacroAdded(QSharedPointer<Macro> macro)
@@ -40,16 +56,16 @@ void MacroManagerWidget::on_addMacroButton_clicked()
     macro->name = "New Macro"; // default name
 
     // Tell the manager to add it. The manager will emit `macroAdded`,
-    // which our `onMacroAdded` slot will catch, updating the UI.
+    // which `onMacroAdded` slot will catch, updating the UI.
     manager->addMacro(macro);
 }
 
 void MacroManagerWidget::on_macroListWidget_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous)
 {
-    Q_UNUSED(previous); // We don't care about the last item
+    Q_UNUSED(previous); // don't care about the last item
 
     if (current) {
-        // Retrieve the pointer we stored in onMacroAdded
+        // Retrieve the pointer stored in onMacroAdded
         currentMacro = current->data(Qt::UserRole).value<QSharedPointer<Macro>>();
     } else {
         currentMacro.clear(); // Clear the pointer if nothing is selected
@@ -65,6 +81,14 @@ void MacroManagerWidget::on_macroNameEdit_textChanged(const QString &text)
     if (currentMacro && ui->macroListWidget->currentItem()) {
         currentMacro->name = text;
         ui->macroListWidget->currentItem()->setText(text);
+        emit manager->macroEdited(currentMacro);
+    }
+}
+
+void MacroManagerWidget::on_macroHotkeyEdit_keySequenceChanged(const QKeySequence &keySequence){
+    if(currentMacro){
+        currentMacro->shortcut = keySequence.toString(QKeySequence::NativeText);
+        emit manager->macroEdited(currentMacro);
     }
 }
 
@@ -75,7 +99,6 @@ void MacroManagerWidget::on_addActionButton_clicked()
     AddActionDialog dialog(this);
     if (dialog.exec() == QDialog::Accepted)
     {
-        // --- TODO: Implement getAction() in AddActionDialog ---
         QSharedPointer<Action> newAction = dialog.getAction();
         if (newAction) {
             currentMacro->addAction(newAction);
@@ -107,7 +130,7 @@ void MacroManagerWidget::on_removeMacroButton_clicked()
 
     if (macro) {
         // Tell the manager to remove it. The manager will
-        // emit macroRemoved, which our onMacroRemoved slot
+        // emit macroRemoved, which onMacroRemoved slot
         // will catch, updating the UI.
         manager->removeMacro(macro);
     }
@@ -161,13 +184,16 @@ void MacroManagerWidget::updateDetailPane()
         ui->macroNameEdit->clear();
         ui->macroHotkeyEdit->clear();
         ui->actionListWidget->clear();
+        ui->hotkeyErrorLabel->clear();
     } else {
         // A macro is selected: enable panel and fill fields
         ui->rightPanel->setEnabled(true);
         ui->macroNameEdit->setText(currentMacro->name);
-        ui->macroHotkeyEdit->setText(currentMacro->shortcut); // Assuming Macro has 'shortcut'
+        ui->macroHotkeyEdit->setKeySequence(QKeySequence::fromString(currentMacro->shortcut));
         updateActionList();
+        ui->hotkeyErrorLabel->clear();
     }
+
 }
 
 void MacroManagerWidget::updateActionList()

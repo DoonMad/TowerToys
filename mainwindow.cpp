@@ -24,7 +24,7 @@ MainWindow::MainWindow(QWidget *parent)
     controller = new AppController(this, this);
     controller->start();
 
-    macroManager = new MacroManager(this);
+    macroManager = controller->getMacroManager();
     moduleManager = new ModuleManager(this);
     moduleInfoMap = moduleManager->loadModules();
 

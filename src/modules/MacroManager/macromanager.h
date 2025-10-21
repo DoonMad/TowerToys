@@ -15,6 +15,7 @@ signals:
     void macroAdded(QSharedPointer<Macro> macro);
     void macroRemoved(QSharedPointer<Macro> macro);
     void macroEdited(QSharedPointer<Macro> macro);
+    void hotkeyStatus(QString macroName, bool success, QString message);
 
 public slots:
     void addMacro(QSharedPointer<Macro> macro);

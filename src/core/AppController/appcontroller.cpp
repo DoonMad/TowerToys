@@ -7,7 +7,15 @@
 AppController::AppController(QMainWindow *window, QObject *parent)
     : QObject(parent), mainWindow(window)
 {
+    macroManager = new MacroManager(this);
+    hotkeyManager = new HotkeyManager(this);
 
+    connect(macroManager, &MacroManager::macroAdded, hotkeyManager, &HotkeyManager::registerMacro);
+    connect(macroManager, &MacroManager::macroRemoved, hotkeyManager, &HotkeyManager::unregisterMacro);
+    connect(macroManager, &MacroManager::macroEdited, hotkeyManager, &HotkeyManager::reregisterMacro);
+    connect(hotkeyManager, &HotkeyManager::hotkeyStatusChanged, macroManager, [this](QSharedPointer<Macro> macro, bool success, QString message) {
+        emit macroManager->hotkeyStatus(macro->name, success, message);
+    });
 }
 
 void AppController::start()
