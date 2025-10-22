@@ -189,7 +189,11 @@ void MacroManagerWidget::updateDetailPane()
         // A macro is selected: enable panel and fill fields
         ui->rightPanel->setEnabled(true);
         ui->macroNameEdit->setText(currentMacro->name);
+
+        ui->macroHotkeyEdit->blockSignals(true); // to solve a bug where just updating the detailsPane re-registers a macro
         ui->macroHotkeyEdit->setKeySequence(QKeySequence::fromString(currentMacro->shortcut));
+        ui->macroHotkeyEdit->blockSignals(false);
+
         updateActionList();
         ui->hotkeyErrorLabel->clear();
     }
