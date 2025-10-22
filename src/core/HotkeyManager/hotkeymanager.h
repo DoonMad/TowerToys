@@ -2,9 +2,10 @@
 #define HOTKEYMANAGER_H
 
 #include <QObject>
-#include <QHash>
+#include <QMap>
 #include "MacroManager/macro.h"
 #include "qhotkey.h"
+#include <QSet>
 
 
 class HotkeyManager : public QObject
@@ -15,8 +16,9 @@ public:
     ~HotkeyManager();
 
 private:
-    QHash<QSharedPointer<Macro>, QHotkey*> activeHotkeys;
-    QHash<QKeySequence, QSharedPointer<Macro>> activeSequences;
+    QMap<QSharedPointer<Macro>, QHotkey*> activeHotkeys;
+    QMap<QKeySequence, QSharedPointer<Macro>> activeSequences;
+    QSet<QKeySequence> blacklist;
 
 public slots:
     void registerMacro(QSharedPointer<Macro> macro);

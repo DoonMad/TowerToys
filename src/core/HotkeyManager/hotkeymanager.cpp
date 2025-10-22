@@ -6,7 +6,12 @@
 HotkeyManager::HotkeyManager(QObject *parent)
     : QObject{parent}
 {
-
+    blacklist.insert(QKeySequence::fromString("Ctrl+C"));
+    blacklist.insert(QKeySequence::fromString("Ctrl+V"));
+    blacklist.insert(QKeySequence::fromString("Ctrl+X"));
+    blacklist.insert(QKeySequence::fromString("Ctrl+A"));
+    blacklist.insert(QKeySequence::fromString("Ctrl+Z"));
+    blacklist.insert(QKeySequence::fromString("Alt+F4"));
 }
 
 HotkeyManager::~HotkeyManager()
@@ -31,6 +36,11 @@ void HotkeyManager::registerMacro(QSharedPointer<Macro> macro)
         return;
     }
 
+    if (blacklist.contains(sequence)) {
+        emit hotkeyStatusChanged(macro, false, "Shortcut is reserved by the system.");
+        return;
+    }
+
     // The 'true' argument automatically registers it with the OS
     QHotkey* hotkey = new QHotkey(sequence, true, this);
 
@@ -43,6 +53,7 @@ void HotkeyManager::registerMacro(QSharedPointer<Macro> macro)
     // Connecting hotkey's activated() signal to central handler slot
     connect(hotkey, &QHotkey::activated, this, &HotkeyManager::onHotkeyActivated);
     activeHotkeys.insert(macro, hotkey);
+    activeSequences.insert(sequence, macro);
 
     emit hotkeyStatusChanged(macro, true, "Registered!");
     qDebug() << "Registered hotkey:" << sequence.toString();
@@ -54,16 +65,20 @@ void HotkeyManager::unregisterMacro(QSharedPointer<Macro> macro)
         return;
     }
 
+    if (!activeHotkeys.contains(macro)) {
+        qWarning() << "Tried to unregister a macro that was not in activeHotkeys:" << macro->name;
+        return;
+    }
+
+    QHotkey* hotkey = activeHotkeys.value(macro);
     QKeySequence sequence = QKeySequence::fromString(macro->shortcut);
+
     if (!activeSequences.contains(sequence)) {
         return;
     }
 
-    QSharedPointer<Macro> storedMacro = activeSequences.value(sequence);
-
-    if (!activeHotkeys.contains(macro)) return;
-    QHotkey* hotkey = activeHotkeys.value(macro);
     activeHotkeys.remove(macro);
+    activeSequences.remove(sequence);
     delete hotkey;
 
     qDebug() << "Unregistered hotkey for macro:" << macro->name;
