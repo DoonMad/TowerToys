@@ -2,6 +2,8 @@
 #define OPENAPPACTION_H
 
 #include "action.h"
+#include <QJsonObject>
+#include <QJsonObject>
 
 class OpenAppAction : public Action
 {
@@ -12,6 +14,7 @@ public:
     QString description() const override{
         return "Open "+appPath;
     }
+    QJsonObject toJson() const override;
 };
 
 #endif // OPENAPPACTION_H

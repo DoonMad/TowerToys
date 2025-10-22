@@ -10,6 +10,7 @@ public:
     TypeKeystrokeAction(const QString& text);
     void execute() override;
     QString description() const override;
+    QJsonObject toJson() const override;
 
 private:
     QString text;

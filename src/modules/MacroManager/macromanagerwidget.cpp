@@ -21,6 +21,16 @@ MacroManagerWidget::MacroManagerWidget(MacroManager* manager, const ModuleInfo& 
     connect(manager, &MacroManager::hotkeyStatus, this, &MacroManagerWidget::onHotkeyStatus);
 
     ui->rightPanel->setEnabled(false);
+
+    populateMacroList();
+}
+
+void MacroManagerWidget::populateMacroList()
+{
+    QList<QSharedPointer<Macro>> existingMacros = manager->getMacros();
+    for (const QSharedPointer<Macro>& macro : existingMacros) {
+        onMacroAdded(macro);
+    }
 }
 
 void MacroManagerWidget::onHotkeyStatus(QString macroName, bool success, QString message)

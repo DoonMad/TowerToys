@@ -24,8 +24,9 @@ private:
     MacroManager* manager;
     QSharedPointer<Macro> currentMacro;
 
-    void updateDetailPane();    // Helper to refresh the right side
+    void updateDetailPane();
     void updateActionList();
+    void populateMacroList();
 
 private slots:
     void onMacroAdded(QSharedPointer<Macro> macro);

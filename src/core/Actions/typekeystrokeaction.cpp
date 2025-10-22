@@ -12,3 +12,12 @@ void TypeKeystrokeAction::execute() {
 QString TypeKeystrokeAction::description() const {
     return "Type: " + text;
 }
+
+
+QJsonObject TypeKeystrokeAction::toJson() const
+{
+    QJsonObject obj;
+    obj["type"] = "TypeKeystrokeAction";
+    obj["text"] = text;
+    return obj;
+}

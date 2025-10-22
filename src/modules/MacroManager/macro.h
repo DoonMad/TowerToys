@@ -5,6 +5,7 @@
 #include <QString>
 #include <QSharedPointer>
 #include "action.h"
+#include <QJsonObject>
 
 class Macro : public QObject
 {
@@ -18,6 +19,7 @@ public:
     void addAction(QSharedPointer<Action> action);
     void removeAction(QSharedPointer<Action> action);
     void execute();
+    QJsonObject toJson() const;
 
 signals:
     void executed();

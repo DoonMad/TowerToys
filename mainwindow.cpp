@@ -30,7 +30,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     setupDynamicUI();
 
-
+    macroManager->loadMacros();
     // MacroManager *manager = new MacroManager(this);
     // connect(manager, &MacroManager::macroAdded, this, [=](QSharedPointer<Macro> macro){
     //     ui->listWidget->addItem(macro->name);

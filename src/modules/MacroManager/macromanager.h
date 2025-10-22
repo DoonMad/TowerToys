@@ -10,6 +10,7 @@ class MacroManager : public QObject
     Q_OBJECT
 public:
     explicit MacroManager(QObject *parent = nullptr);
+    QList<QSharedPointer<Macro>> getMacros() const { return macros; }
 
 signals:
     void macroAdded(QSharedPointer<Macro> macro);
@@ -20,9 +21,14 @@ signals:
 public slots:
     void addMacro(QSharedPointer<Macro> macro);
     void removeMacro(QSharedPointer<Macro> macro);
+    void loadMacros();
+
+private slots:
+    void saveMacros() const;
 
 private:
     QList<QSharedPointer<Macro>> macros;
+    QString getSavePath() const;
 };
 
 #endif // MACROMANAGER_H
