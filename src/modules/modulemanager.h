@@ -2,7 +2,7 @@
 #define MODULEMANAGER_H
 
 #include <QObject>
-#include <QHash>
+#include <QMap>
 #include <QString>
 #include "moduleinfo.h"
 
@@ -11,7 +11,7 @@ class ModuleManager : public QObject
     Q_OBJECT
 public:
     explicit ModuleManager(QObject *parent = nullptr);
-    QHash<QString, ModuleInfo> loadModules();
+    QMap<QString, ModuleInfo> loadModules();
 
 signals:
 };

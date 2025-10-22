@@ -34,8 +34,8 @@ private:
     AppController *controller;
     MacroManager *macroManager;
     ModuleManager *moduleManager;
-    QHash<QString, ModuleInfo> moduleInfoMap;
-    QHash<QString, QWidget*> loadedWidgets;
+    QMap<QString, ModuleInfo> moduleInfoMap;
+    QMap<QString, QWidget*> loadedWidgets;
     QStackedWidget *stackWidget;
 
     void onModuleButtonClicked(const QString& moduleName);

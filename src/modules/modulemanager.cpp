@@ -6,8 +6,8 @@
 
 ModuleManager::ModuleManager(QObject *parent) : QObject(parent) {}
 
-QHash<QString, ModuleInfo> ModuleManager::loadModules() {
-    QHash<QString, ModuleInfo> modules;
+QMap<QString, ModuleInfo> ModuleManager::loadModules() {
+    QMap<QString, ModuleInfo> modules;
 
     const QString jsonPath = ":/resources/modules.json";
     QFile file(jsonPath);

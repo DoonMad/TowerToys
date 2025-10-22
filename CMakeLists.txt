@@ -48,6 +48,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(ShowerToys
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
+        ${QHOTKEY_SOURCES}
         src/modules/MacroManager/macromanager.h src/modules/MacroManager/macromanager.cpp
         src/core/AppController/appcontroller.h src/core/AppController/appcontroller.cpp
         resources.qrc
@@ -61,8 +62,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         src/core/Actions/openurlaction.h src/core/Actions/openurlaction.cpp
         src/core/Actions/typekeystrokeaction.h src/core/Actions/typekeystrokeaction.cpp
         src/core/HotkeyManager/hotkeymanager.h src/core/HotkeyManager/hotkeymanager.cpp
-        ${QHOTKEY_SOURCES}
-
+        src/ui/welcomewidget.h
+        src/ui/welcomewidget.cpp
+        src/ui/welcomewidget.ui
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET ShowerToys APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
@@ -108,6 +110,7 @@ set_target_properties(ShowerToys PROPERTIES
 include(GNUInstallDirs)
 include_directories("src/modules")
 include_directories("src/core")
+include_directories("src/ui")
 install(TARGETS ShowerToys
     BUNDLE DESTINATION .
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}

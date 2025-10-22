@@ -2,7 +2,7 @@
 #include "ui_macromanagerwidget.h"
 #include "macromanager.h"
 #include "macro.h"
-#include "addactiondialog.h" // We'll need this for the "Add Action" button
+#include "addactiondialog.h"
 #include <QListWidgetItem>
 #include <QVariant>
 

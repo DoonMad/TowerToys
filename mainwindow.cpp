@@ -2,7 +2,6 @@
 #include "./ui_mainwindow.h"
 #include "QMessageBox"
 #include "QPushButton"
-#include "MacroManager/macromanager.h"
 #include "AppController/appcontroller.h"
 #include <QSharedPointer>
 
@@ -14,6 +13,7 @@
 #include <QHash>
 #include <QString>
 #include <MacroManager/macromanagerwidget.h>
+#include "welcomewidget.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -55,6 +55,8 @@ void MainWindow::setupDynamicUI() {
     QVBoxLayout *sideLayout = new QVBoxLayout(sidePanel);
 
     stackWidget = new QStackedWidget;
+    QWidget *welcomePage = new WelcomeWidget(this);
+    stackWidget->addWidget(welcomePage);
 
     for (const ModuleInfo& moduleInfo: moduleInfoMap)
     {
@@ -68,6 +70,7 @@ void MainWindow::setupDynamicUI() {
         });
     }
 
+    stackWidget->setCurrentWidget(welcomePage);
     sideLayout->addStretch();
     mainLayout->addWidget(sidePanel);
     mainLayout->addWidget(stackWidget);
