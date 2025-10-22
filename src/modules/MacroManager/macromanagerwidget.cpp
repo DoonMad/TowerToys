@@ -113,6 +113,7 @@ void MacroManagerWidget::on_addActionButton_clicked()
         if (newAction) {
             currentMacro->addAction(newAction);
             updateActionList(); // Refresh the list
+            emit manager->macroEdited(currentMacro);
         }
     }
 }
@@ -164,6 +165,7 @@ void MacroManagerWidget::on_removeActionButton_clicked()
     if (action) {
         currentMacro->removeAction(action);
         delete ui->actionListWidget->takeItem(currentRow);
+        emit manager->macroEdited(currentMacro);
     }
 }
 

@@ -9,6 +9,10 @@ AppController::AppController(QMainWindow *window, QObject *parent)
 {
     macroManager = new MacroManager(this);
     hotkeyManager = new HotkeyManager(this);
+    shareServer = new LocalShareServer(this);
+    fileShareManager = new FileShareManager(this);
+
+    shareServer->setFileShareManager(fileShareManager);
 
     connect(macroManager, &MacroManager::macroAdded, hotkeyManager, &HotkeyManager::registerMacro);
     connect(macroManager, &MacroManager::macroRemoved, hotkeyManager, &HotkeyManager::unregisterMacro);
@@ -16,6 +20,10 @@ AppController::AppController(QMainWindow *window, QObject *parent)
     connect(hotkeyManager, &HotkeyManager::hotkeyStatusChanged, macroManager, [this](QSharedPointer<Macro> macro, bool success, QString message) {
         emit macroManager->hotkeyStatus(macro->name, success, message);
     });
+
+    connect(shareServer, &LocalShareServer::fileUploadRequest, fileShareManager, &FileShareManager::onFileUploadRequest);
+    // connect(shareServer, &LocalShareServer::fileListRequest, fileShareManager, &FileShareManager::onFileListRequest);
+    // connect(shareServer, &LocalShareServer::fileDownloadRequest, fileShareManager, &FileShareManager::onFileDownloadRequest);
 }
 
 void AppController::start()

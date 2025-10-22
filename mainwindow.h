@@ -11,6 +11,9 @@
 #include <modulemanager.h>
 #include <QStackedWidget>
 
+class LocalShareServer;
+class FileShareManager;
+
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
@@ -34,6 +37,8 @@ private:
     AppController *controller;
     MacroManager *macroManager;
     ModuleManager *moduleManager;
+    LocalShareServer* shareServer;
+    FileShareManager* fileShareManager;
     QMap<QString, ModuleInfo> moduleInfoMap;
     QMap<QString, QWidget*> loadedWidgets;
     QStackedWidget *stackWidget;

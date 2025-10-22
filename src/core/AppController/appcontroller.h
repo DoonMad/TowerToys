@@ -8,6 +8,8 @@
 #include <qhotkey.h>
 #include "MacroManager/macromanager.h"
 #include <HotkeyManager/hotkeymanager.h>
+#include <LocalShareServer/localshareserver.h>
+#include <FileShare/filesharemanager.h>
 
 class AppController : public QObject
 {
@@ -16,6 +18,8 @@ public:
     explicit AppController(QMainWindow * window, QObject *parent = nullptr);
     void start();
     MacroManager* getMacroManager() const { return macroManager; }
+    LocalShareServer* getShareServer() const { return shareServer; }
+    FileShareManager* getFileShareManager() const { return fileShareManager; }
 
 private:
     QSystemTrayIcon *trayIcon;
@@ -23,6 +27,8 @@ private:
     QMainWindow *mainWindow;
     HotkeyManager* hotkeyManager;
     MacroManager* macroManager;
+    LocalShareServer* shareServer;
+    FileShareManager* fileShareManager;
 
     void setupTray();
     void setupBackgroundTasks();

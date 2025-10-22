@@ -44,11 +44,15 @@ endif()
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     find_package(Qt6 REQUIRED COMPONENTS Core)
-
+    find_package(Qt6 REQUIRED COMPONENTS Core)
+    find_package(Qt6 REQUIRED COMPONENTS Core)
+    find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Network HttpServer)
     qt_add_executable(ShowerToys
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
         ${QHOTKEY_SOURCES}
+        lib/qrcodegen/qrcodegen.hpp
+        lib/qrcodegen/qrcodegen.cpp
         src/modules/MacroManager/macromanager.h src/modules/MacroManager/macromanager.cpp
         src/core/AppController/appcontroller.h src/core/AppController/appcontroller.cpp
         resources.qrc
@@ -65,6 +69,12 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         src/ui/welcomewidget.h
         src/ui/welcomewidget.cpp
         src/ui/welcomewidget.ui
+        src/modules/FileShare/filesharemanager.h
+        src/modules/FileShare/filesharemanager.cpp
+        src/modules/FileShare/filesharewidget.h
+        src/modules/FileShare/filesharewidget.cpp
+        src/modules/FileShare/filesharewidget.ui
+        src/core/LocalShareServer/localshareserver.h src/core/LocalShareServer/localshareserver.cpp
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET ShowerToys APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
@@ -86,12 +96,17 @@ endif()
 
 target_include_directories(ShowerToys PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/lib/QHotkey"
+    "${CMAKE_CURRENT_SOURCE_DIR}/lib/qrcodegen"
 )
 
 target_link_libraries(ShowerToys PRIVATE
     Qt${QT_VERSION_MAJOR}::Widgets
     Qt6::Core
+    Qt${QT_VERSION_MAJOR}::Network
+    Qt${QT_VERSION_MAJOR}::HttpServer
 )
+target_link_libraries(ShowerToys PRIVATE Qt6::Core)
+target_link_libraries(ShowerToys PRIVATE Qt6::Core)
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an
