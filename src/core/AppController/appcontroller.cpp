@@ -3,6 +3,10 @@
 #include <QMenu>
 #include <QDebug>
 #include <QApplication>
+#include <QGuiApplication> // ADD FOR CLIPBOARD
+#include <QClipboard>
+#include <QMimeData>
+#include <QSettings>
 
 AppController::AppController(QMainWindow *window, QObject *parent)
     : QObject(parent), mainWindow(window)
@@ -11,8 +15,13 @@ AppController::AppController(QMainWindow *window, QObject *parent)
     hotkeyManager = new HotkeyManager(this);
     shareServer = new LocalShareServer(this);
     fileShareManager = new FileShareManager(this);
+    clipboardSyncManager = new ClipboardSyncManager(this);
 
     shareServer->setFileShareManager(fileShareManager);
+    shareServer->setClipboardSyncManager(clipboardSyncManager);
+
+    QSettings settings;
+    clipboardSyncEnabled = settings.value("clipboardSyncEnabled", true).toBool();
 
     connect(macroManager, &MacroManager::macroAdded, hotkeyManager, &HotkeyManager::registerMacro);
     connect(macroManager, &MacroManager::macroRemoved, hotkeyManager, &HotkeyManager::unregisterMacro);
@@ -24,11 +33,55 @@ AppController::AppController(QMainWindow *window, QObject *parent)
     connect(shareServer, &LocalShareServer::fileUploadRequest, fileShareManager, &FileShareManager::onFileUploadRequest);
     // connect(shareServer, &LocalShareServer::fileListRequest, fileShareManager, &FileShareManager::onFileListRequest);
     // connect(shareServer, &LocalShareServer::fileDownloadRequest, fileShareManager, &FileShareManager::onFileDownloadRequest);
+
+    connect(QGuiApplication::clipboard(), &QClipboard::dataChanged, this, &AppController::onSystemClipboardChanged);
+    // connect(shareServer, &LocalShareServer::clipboardDataRequest, clipboardSyncManager, &ClipboardSyncManager::handleClipboardDataRequest);
 }
 
 void AppController::start()
 {
     setupTray();
+}
+
+bool AppController::isClipboardSyncEnabled() const
+{
+    return clipboardSyncEnabled;
+}
+
+void AppController::setClipboardSyncEnabled(bool enabled)
+{
+    if (clipboardSyncEnabled != enabled) {
+        clipboardSyncEnabled = enabled;
+        qDebug() << "AppController: Clipboard Sync set to" << enabled;
+
+        // --- SAVE SETTING ---
+        QSettings settings;
+        settings.setValue("clipboardSyncEnabled", clipboardSyncEnabled); // <-- SAVE VALUE
+
+        // Optional: If disabling, maybe clear the last pushed text?
+        // if (!enabled) {
+        //    m_clipboardSyncManager->updateClipboardText("");
+        //    m_shareServer->pushTextToClients("");
+        // }
+    }
+}
+
+void AppController::onSystemClipboardChanged()
+{
+    // --- ADD CHECK ---
+    if (!clipboardSyncEnabled) { // <-- CHECK IF ENABLED
+        return; // Do nothing if sync is disabled
+    }
+
+    QClipboard *clipboard = QGuiApplication::clipboard();
+    const QMimeData *mimeData = clipboard->mimeData();
+
+    if (mimeData->hasText()) {
+        QString text = clipboard->text();
+        qDebug() << "AppController: Clipboard changed (text, SYNCING):" << text.left(50) << "...";
+        clipboardSyncManager->updateClipboardText(text);
+        shareServer->pushTextToClients(text);
+    }
 }
 
 void AppController::setupTray(){
@@ -45,3 +98,5 @@ void AppController::setupTray(){
     trayIcon->setContextMenu(trayMenu);
     trayIcon->show();
 }
+
+

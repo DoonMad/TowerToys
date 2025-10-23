@@ -16,7 +16,7 @@
       "name": "Clipboard Manager",
       "description": "Access your clipboard history and manage copied items.",
       "icon": ":/resources/icons/clipboard.png",
-      "widget": "ClipboardWidget"
+      "widget": "ClipboardSyncWidget"
     }
   ]
 }

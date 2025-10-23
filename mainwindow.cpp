@@ -14,9 +14,8 @@
 #include <QString>
 #include <MacroManager/macromanagerwidget.h>
 #include "welcomewidget.h"
-#include "LocalShareServer/localshareserver.h"
-#include "FileShare/filesharemanager.h"
 #include "FileShare/filesharewidget.h"
+#include "ClipboardSync/clipboardsyncwidget.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -33,6 +32,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     shareServer = controller->getShareServer();
     fileShareManager = controller->getFileShareManager();
+    clipboardSyncManager = controller->getClipboardSyncManager();
 
     setupDynamicUI();
 
@@ -123,8 +123,7 @@ QWidget* MainWindow::createWidgetForModule(const QString& moduleName)
 
     if (info.widgetClass == "ClipboardSyncWidget")
     {
-        // return new ClipboardSyncWidget(m_clipboardManager, info, this);
-        return new QWidget(this); // Placeholder for now
+        return new ClipboardSyncWidget(controller, clipboardSyncManager, info, this);
     }
 
     return nullptr;

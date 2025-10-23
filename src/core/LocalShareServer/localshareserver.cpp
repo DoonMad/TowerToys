@@ -7,6 +7,7 @@
 #include <QDebug>
 #include <QTcpServer>
 #include <FileShare/filesharemanager.h>
+#include <ClipboardSync/clipboardsyncmanager.h>
 
 // HTTP server on port 8080
 const quint16 HTTP_PORT = 8080;
@@ -33,11 +34,14 @@ LocalShareServer::LocalShareServer(QObject *parent)
 
     // Route "/clipboard"
     // Same as above, just emit a signal for the ClipboardManager
-    httpServer.route("/clipboard", QHttpServerRequest::Method::Get, [this](const QHttpServerRequest &request) {
-       emit clipboardDataRequest(request);
-       // This MUST be handled by the ClipboardManager, which will send
-       // the real response. We return an "in-progress" response.
-       return QHttpServerResponse(QHttpServerResponse::StatusCode::Continue);
+    httpServer.route("/clipboard", QHttpServerRequest::Method::Get, [this](const QHttpServerRequest &req, QHttpServerResponder &res) {
+        // Directly call the ClipboardSyncManager (if set)
+        if (clipboardSyncManager) {
+            clipboardSyncManager->handleClipboardDataRequest(req, res);
+        } else {
+            // Fallback if manager isn't set (send error)
+            res.sendResponse(QHttpServerResponse(QHttpServerResponse::StatusCode::InternalServerError));
+        }
     });
 
     httpServer.route("/files", QHttpServerRequest::Method::Get,
@@ -74,6 +78,10 @@ LocalShareServer::~LocalShareServer()
 
 void LocalShareServer::setFileShareManager(FileShareManager* manager) {
     fileShareManager = manager;
+}
+
+void LocalShareServer::setClipboardSyncManager(ClipboardSyncManager* manager) {
+    clipboardSyncManager = manager;
 }
 
 void LocalShareServer::startServer()

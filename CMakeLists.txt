@@ -46,6 +46,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     find_package(Qt6 REQUIRED COMPONENTS Core)
     find_package(Qt6 REQUIRED COMPONENTS Core)
     find_package(Qt6 REQUIRED COMPONENTS Core)
+    find_package(Qt6 REQUIRED COMPONENTS Core)
     find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Network HttpServer)
     qt_add_executable(ShowerToys
         MANUAL_FINALIZATION
@@ -75,6 +76,11 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         src/modules/FileShare/filesharewidget.cpp
         src/modules/FileShare/filesharewidget.ui
         src/core/LocalShareServer/localshareserver.h src/core/LocalShareServer/localshareserver.cpp
+        src/modules/ClipboardSync/clipboardsyncmanager.h
+        src/modules/ClipboardSync/clipboardsyncmanager.cpp
+        src/modules/ClipboardSync/clipboardsyncwidget.h
+        src/modules/ClipboardSync/clipboardsyncwidget.cpp
+        src/modules/ClipboardSync/clipboardsyncwidget.ui
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET ShowerToys APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
@@ -105,6 +111,7 @@ target_link_libraries(ShowerToys PRIVATE
     Qt${QT_VERSION_MAJOR}::Network
     Qt${QT_VERSION_MAJOR}::HttpServer
 )
+target_link_libraries(ShowerToys PRIVATE Qt6::Core)
 target_link_libraries(ShowerToys PRIVATE Qt6::Core)
 target_link_libraries(ShowerToys PRIVATE Qt6::Core)
 

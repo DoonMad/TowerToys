@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <AppController/appcontroller.h>
 #include <MacroManager/macromanager.h>
+#include <ClipboardSync/clipboardsyncmanager.h>
 #include <QHash>
 #include <QString>
 #include <moduleinfo.h>
@@ -39,6 +40,7 @@ private:
     ModuleManager *moduleManager;
     LocalShareServer* shareServer;
     FileShareManager* fileShareManager;
+    ClipboardSyncManager* clipboardSyncManager;
     QMap<QString, ModuleInfo> moduleInfoMap;
     QMap<QString, QWidget*> loadedWidgets;
     QStackedWidget *stackWidget;

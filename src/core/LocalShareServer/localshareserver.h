@@ -11,6 +11,7 @@ class QWebSocket;
 class QTcpServer;
 class FileShareManager;
 struct QHttpServerRequest;
+class ClipboardSyncManager;
 
 class LocalShareServer : public QObject
 {
@@ -21,6 +22,7 @@ public:
 
     static QString getLocalIpAddress();
     void setFileShareManager(FileShareManager* manager);
+    void setClipboardSyncManager(ClipboardSyncManager* manager);
 
 public slots:
     void startServer();
@@ -43,12 +45,6 @@ signals:
      */
     void fileUploadRequest(const QHttpServerRequest &request);
 
-    /**
-     * @brief Emitted when a client requests the current clipboard.
-     * (Connected to by ClipboardSyncManager)
-     */
-    void clipboardDataRequest(const QHttpServerRequest &request);
-
     // for downloading files from the server
     // void fileListRequest(const QHttpServerRequest &request);
     // void fileDownloadRequest(const QHttpServerRequest &request);
@@ -66,6 +62,7 @@ private:
     QWebSocketServer* webSocketServer;
     QTcpServer* tcpServer;
     FileShareManager* fileShareManager = nullptr;
+    ClipboardSyncManager* clipboardSyncManager = nullptr;
 
     QList<QWebSocket*> clients;
 };
