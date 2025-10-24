@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>300</height>
+    <height>350</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,7 +19,6 @@
      <property name="font">
       <font>
        <pointsize>12</pointsize>
-       <weight>75</weight>
        <bold>true</bold>
       </font>
      </property>
@@ -31,7 +30,23 @@
    <item>
     <widget class="QLabel" name="descriptionLabel">
      <property name="text">
-      <string>Automatically sync clipboard text from this PC to other devices connected via the web interface. (Requires server to be running).</string>
+      <string>Automatically sync clipboard text from this PC to other devices connected via the web interface or the companion app.</string>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="serverRequirementLabel">
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">color: #f00;</string>
+     </property>
+     <property name="text">
+      <string>&lt;b&gt;Note:&lt;/b&gt; The Local Share Server must be running for clipboard sync to function. You can start/stop it in the 'Local File Share' module.</string>
      </property>
      <property name="wordWrap">
       <bool>true</bool>
@@ -44,18 +59,39 @@
       <string>Enable Clipboard Sync (PC-to-Device)</string>
      </property>
      <property name="checked">
-      <bool>true</bool> </property>
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="Line" name="line">
+     <property name="orientation">
+      <enum>Qt::Orientation::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="appInfoLabel">
+     <property name="text">
+      <string>&lt;b&gt;Companion App (Recommended):&lt;/b&gt;&lt;br&gt;For reliable background sync (even PC-to-device when your phone screen is off), install the ShowerToys Companion app on your Android device.&lt;br&gt;&lt;br&gt;&lt;i&gt;(Download link/QR code will be added here later when the APK is available).&lt;/i&gt;</string>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+     <property name="openExternalLinks">
+      <bool>true</bool>
+     </property>
     </widget>
    </item>
    <item>
     <spacer name="verticalSpacer">
      <property name="orientation">
-      <enum>Qt::Vertical</enum>
+      <enum>Qt::Orientation::Vertical</enum>
      </property>
      <property name="sizeHint" stdset="0">
       <size>
        <width>20</width>
-       <height>193</height>
+       <height>40</height>
       </size>
      </property>
     </spacer>

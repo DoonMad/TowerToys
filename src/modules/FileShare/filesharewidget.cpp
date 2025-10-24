@@ -19,8 +19,8 @@ FileShareWidget::FileShareWidget(LocalShareServer* server,
 {
     ui->setupUi(this);
 
-    ui->titleLabel->setText(info.name);
-    ui->descriptionLabel->setText(info.description);
+    // ui->titleLabel->setText(info.name);
+    // ui->descriptionLabel->setText(info.description);
 
     // Connect the server's status signal to UI slot
     connect(server, &LocalShareServer::serverStatusChanged,
@@ -31,7 +31,7 @@ FileShareWidget::FileShareWidget(LocalShareServer* server,
             this, &FileShareWidget::onNewNotification);
 
     // Set initial state
-    ui->serverInfoGroup->setVisible(false);
+    // ui->serverInfoGroup->setVisible(false);
 }
 
 FileShareWidget::~FileShareWidget()
@@ -56,13 +56,13 @@ void FileShareWidget::onServerStatusChanged(bool running, const QString &serverU
     if (running) {
         ui->toggleServerButton->setText("Stop Server");
         ui->urlLabel->setText(QString("Connect at: %1").arg(serverUrl));
-        ui->serverInfoGroup->setVisible(true);
+        // ui->serverInfoGroup->setVisible(true);
         generateQrCode(serverUrl);
     } else {
         ui->toggleServerButton->setChecked(false); // Ensure button is "off"
         ui->toggleServerButton->setText("Start Server");
         ui->urlLabel->setText("Status: Server is OFF");
-        ui->serverInfoGroup->setVisible(false);
+        // ui->serverInfoGroup->setVisible(false);
         ui->qrCodeLabel->setPixmap(QPixmap()); // Clear the QR code
         ui->qrCodeLabel->setText("QR Code");
         ui->qrCodeLabel->setStyleSheet("background-color: #eee;");

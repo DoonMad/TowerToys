@@ -24,15 +24,13 @@
       </font>
      </property>
      <property name="text">
-      <string>Local File Share</string>
-     </property>
+      <string>Local File Share &amp; Sync Server</string> </property>
     </widget>
    </item>
    <item>
     <widget class="QLabel" name="descriptionLabel">
      <property name="text">
-      <string>Start the server to share files with any device on your local Wi-Fi network. No app needed.</string>
-     </property>
+      <string>Start the server to enable local Wi-Fi file sharing and clipboard sync (PC-to-device). Other devices connect using their web browser. No mobile app needed for basic functionality.</string> </property>
      <property name="wordWrap">
       <bool>true</bool>
      </property>
@@ -77,8 +75,7 @@
         <item>
          <widget class="QLabel" name="label">
           <property name="text">
-           <string>On your phone or another device, open your web browser and go to the URL above. Or, scan the QR code.</string>
-          </property>
+           <string>On another device on the same Wi-Fi, open a web browser and go to the URL above, or scan the QR code. This page allows file upload/download and receives clipboard updates from this PC.</string> </property>
           <property name="wordWrap">
            <bool>true</bool>
           </property>
