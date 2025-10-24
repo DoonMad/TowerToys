@@ -81,6 +81,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         src/modules/ClipboardSync/clipboardsyncwidget.h
         src/modules/ClipboardSync/clipboardsyncwidget.cpp
         src/modules/ClipboardSync/clipboardsyncwidget.ui
+        src/core/Actions/openvscodefolderaction.cpp src/core/Actions/openvscodefolderaction.h
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET ShowerToys APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

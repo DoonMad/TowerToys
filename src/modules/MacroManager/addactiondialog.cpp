@@ -3,6 +3,7 @@
 #include "Actions/openappaction.h"
 #include "Actions/openurlaction.h"
 #include "Actions/typekeystrokeaction.h"
+#include "Actions/openvscodefolderaction.h"
 #include <QFileDialog>
 
 AddActionDialog::AddActionDialog(QWidget *parent)
@@ -11,7 +12,7 @@ AddActionDialog::AddActionDialog(QWidget *parent)
 {
     ui->setupUi(this);
 
-    ui->actionTypeCombo->addItems({"Open App", "Open URL", "Type Keystroke"});
+    ui->actionTypeCombo->addItems({"Open App", "Open URL", "Type Keystroke", "Open Folder in VS Code"});
     connect(ui->actionTypeCombo, QOverload<int>::of(&QComboBox::currentIndexChanged), ui->stackedWidget, &QStackedWidget::setCurrentIndex);
     ui->stackedWidget->setCurrentIndex(0);
 }
@@ -43,13 +44,18 @@ QSharedPointer<Action> AddActionDialog::getAction() const
         if (text.isEmpty()) return nullptr;
         return QSharedPointer<TypeKeystrokeAction>::create(text);
     }
+    else if (actionType == "Open Folder in VS Code")
+    {
+        QString path = ui->vsCodeFolderPathEdit->text();
+        if (path.isEmpty()) return nullptr;
+        return QSharedPointer<OpenVSCodeFolderAction>::create(path);
+    }
 
     return nullptr;
 }
 
 void AddActionDialog::on_browseAppButton_clicked()
 {
-    // Open a file dialog to find .exe files
     QString filePath = QFileDialog::getOpenFileName(
         this,
         "Select Application",
@@ -59,6 +65,20 @@ void AddActionDialog::on_browseAppButton_clicked()
 
     if (!filePath.isEmpty()) {
         ui->appPathEdit->setText(filePath);
+    }
+}
+
+void AddActionDialog::on_browseVSCodeFolderButton_clicked()
+{
+    QString dirPath = QFileDialog::getExistingDirectory(
+        this,
+        "Select Folder to Open in VS Code",
+        QString(), // Start in default directory
+        QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks
+        );
+
+    if (!dirPath.isEmpty()) {
+        ui->vsCodeFolderPathEdit->setText(dirPath);
     }
 }
 
