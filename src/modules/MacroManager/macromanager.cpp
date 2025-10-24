@@ -10,6 +10,7 @@
 #include "Actions/openappaction.h"
 #include "Actions/openurlaction.h"
 #include "Actions/typekeystrokeaction.h"
+#include "Actions/openvscodefolderaction.h"
 
 MacroManager::MacroManager(QObject *parent)
     : QObject{parent}
@@ -17,6 +18,8 @@ MacroManager::MacroManager(QObject *parent)
     connect(this, &MacroManager::macroAdded, this, &MacroManager::saveMacros);
     connect(this, &MacroManager::macroRemoved, this, &MacroManager::saveMacros);
     connect(this, &MacroManager::macroEdited, this, &MacroManager::saveMacros);
+
+    loadMacros();
 }
 
 void MacroManager::addMacro(QSharedPointer<Macro> macro){
@@ -118,6 +121,8 @@ void MacroManager::loadMacros()
                 macro->addAction(QSharedPointer<OpenURLAction>::create(actionObj["url"].toString()));
             } else if (type == "TypeKeystrokeAction") {
                 macro->addAction(QSharedPointer<TypeKeystrokeAction>::create(actionObj["text"].toString()));
+            } else if (type == "OpenVSCodeFolderAction") {
+                macro->addAction(QSharedPointer<OpenVSCodeFolderAction>::create(actionObj["path"].toString()));
             } else {
                 qWarning() << "Unknown action type in macros.json:" << type;
             }

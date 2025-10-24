@@ -2,5 +2,8 @@
     <qresource prefix="/">
         <file>resources/icons/app_icon.png</file>
         <file>resources/modules.json</file>
+        <file>resources/icons/clipboard.png</file>
+        <file>resources/icons/macro.png</file>
+        <file>resources/icons/share.png</file>
     </qresource>
 </RCC>

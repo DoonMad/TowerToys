@@ -14,6 +14,7 @@
 
 class LocalShareServer;
 class FileShareManager;
+class QPushButton;
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -44,7 +45,9 @@ private:
     QMap<QString, ModuleInfo> moduleInfoMap;
     QMap<QString, QWidget*> loadedWidgets;
     QStackedWidget *stackWidget;
+    QHash<QString, QPushButton*> moduleButtons;
 
+    void updateButtonSelection(QPushButton* selectedButton);
     void onModuleButtonClicked(const QString& moduleName);
     QWidget* createWidgetForModule(const QString& moduleName);
     void setupDynamicUI();

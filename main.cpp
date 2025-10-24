@@ -8,11 +8,10 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationName("DoonMadOrg");
     QCoreApplication::setApplicationName("ShowerToys");
 
-
-    QApplication::setStyle(QStyleFactory::create("windowsvista"));
-
     QApplication a(argc, argv);
     a.setQuitOnLastWindowClosed(false);
+
+    a.setWindowIcon(QIcon(":/resources/icons/app_icon.png"));
 
     MainWindow w;
     w.show();
