@@ -7,8 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>195</width>
-    <height>80</height>
-   </rect>
+    <height>120</height> </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
@@ -26,15 +25,13 @@
      <item>
       <widget class="QLabel" name="styleLabel">
        <property name="text">
-        <string>Theme: </string>
-       </property>
+        <string>Theme:</string> </property>
       </widget>
      </item>
      <item>
       <spacer name="horizontalSpacer">
        <property name="orientation">
-        <enum>Qt::Orientation::Horizontal</enum>
-       </property>
+        <enum>Qt::Horizontal</enum> </property>
        <property name="sizeHint" stdset="0">
         <size>
          <width>10</width>
@@ -49,10 +46,19 @@
     </layout>
    </item>
    <item>
+    <widget class="QCheckBox" name="startupCheckBox">
+     <property name="toolTip">
+      <string>If checked, ShowerToys will start automatically when you log into Windows.</string>
+     </property>
+     <property name="text">
+      <string>Start on Windows startup</string>
+     </property>
+    </widget>
+   </item>
+   <item>
     <spacer name="verticalSpacer">
      <property name="orientation">
-      <enum>Qt::Orientation::Vertical</enum>
-     </property>
+      <enum>Qt::Vertical</enum> </property>
      <property name="sizeHint" stdset="0">
       <size>
        <width>20</width>

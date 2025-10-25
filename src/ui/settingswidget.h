@@ -18,10 +18,12 @@ public:
 private slots:
     // Slot for when the combo box selection changes
     void onStyleComboBoxCurrentIndexChanged(int index);
+    void onStartupCheckBoxToggled(bool checked);
 
 private:
     void loadSettings();
     void saveSettings(const QString &styleName);
+    void setStartupRegistry(bool enabled);
 
     Ui::SettingsWidget *ui;
 };

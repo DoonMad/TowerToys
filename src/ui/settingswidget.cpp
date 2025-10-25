@@ -5,6 +5,8 @@
 #include <QApplication>  // To apply the style
 #include <QSettings>     // To save the user's choice
 #include <QDebug>
+#include <QDir>
+#include <QCheckBox>
 
 SettingsWidget::SettingsWidget(QWidget *parent) :
     QWidget(parent),
@@ -12,21 +14,27 @@ SettingsWidget::SettingsWidget(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    // 1. Populate the combo box with available styles
     QStringList styleKeys = QStyleFactory::keys();
     ui->styleComboBox->addItems(styleKeys);
 
-    // 2. Load the previously saved setting (if any)
     loadSettings();
 
-    // 3. Connect the combo box signal to our slot
-    connect(ui->styleComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged),
-            this, &SettingsWidget::onStyleComboBoxCurrentIndexChanged);
+    connect(ui->styleComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &SettingsWidget::onStyleComboBoxCurrentIndexChanged);
+    connect(ui->startupCheckBox, &QCheckBox::toggled, this, &SettingsWidget::onStartupCheckBoxToggled);
 }
 
 SettingsWidget::~SettingsWidget()
 {
     delete ui;
+}
+
+void SettingsWidget::onStartupCheckBoxToggled(bool checked)
+{
+    setStartupRegistry(checked); // Call helper to modify registry
+
+    QSettings settings; // Uses org/app name set in main.cpp
+    settings.setValue("startOnStartup", checked);
+    qDebug() << "Saved startOnStartup setting:" << checked;
 }
 
 void SettingsWidget::onStyleComboBoxCurrentIndexChanged(int index)
@@ -60,6 +68,10 @@ void SettingsWidget::loadSettings()
     } else {
         qDebug() << "Saved style not found, using default:" << QApplication::style()->objectName();
     }
+
+    bool startOnStartup = settings.value("startOnStartup", true).toBool(); // Default to false
+    ui->startupCheckBox->setChecked(startOnStartup);
+    qDebug() << "Loaded startOnStartup setting:" << startOnStartup;
 }
 
 void SettingsWidget::saveSettings(const QString &styleName)
@@ -67,4 +79,23 @@ void SettingsWidget::saveSettings(const QString &styleName)
     QSettings settings;
     settings.setValue("applicationStyle", styleName);
     qDebug() << "Saved style setting:" << styleName;
+}
+
+void SettingsWidget::setStartupRegistry(bool enabled)
+{
+    // Use QSettings to access the specific registry key
+    QSettings registrySettings("HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", QSettings::NativeFormat);
+
+    QString appName = QApplication::applicationName(); // "ShowerToys"
+    QString appPath = QDir::toNativeSeparators(QApplication::applicationFilePath()); // Full path to .exe
+
+    if (enabled) {
+        // Add entry: Key = AppName, Value = "C:\Path\To\YourApp.exe"
+        registrySettings.setValue(appName, appPath);
+        qDebug() << "Added to startup:" << appPath;
+    } else {
+        // Remove entry by key name
+        registrySettings.remove(appName);
+        qDebug() << "Removed from startup:" << appName;
+    }
 }
