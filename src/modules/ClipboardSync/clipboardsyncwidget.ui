@@ -73,8 +73,7 @@
    <item>
     <widget class="QLabel" name="appInfoLabel">
      <property name="text">
-      <string>&lt;b&gt;Companion App (Recommended):&lt;/b&gt;&lt;br&gt;For reliable background sync (even PC-to-device when your phone screen is off), install the ShowerToys Companion app on your Android device.&lt;br&gt;&lt;br&gt;&lt;i&gt;(Download link/QR code will be added here later when the APK is available).&lt;/i&gt;</string>
-     </property>
+      <string>&lt;b&gt;Companion App (Recommended for Sync):&lt;/b&gt;&lt;br&gt;For reliable background sync (PC-to-device) and future phone-to-PC sync, install the ShowerToys Companion app on your Android device.&lt;br&gt;&lt;br&gt;&lt;b&gt;Connection:&lt;/b&gt; Open the companion app and scan the QR code shown in the 'Local File Share' module to connect.&lt;br&gt;&lt;br&gt;&lt;i&gt;(Download link/QR code for the APK will be added here later).&lt;/i&gt;</string> </property>
      <property name="wordWrap">
       <bool>true</bool>
      </property>

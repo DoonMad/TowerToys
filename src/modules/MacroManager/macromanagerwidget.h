@@ -40,6 +40,7 @@ private slots:
     void on_executeMacroButton_clicked();
     void on_removeMacroButton_clicked();
     void on_removeActionButton_clicked();
+    void on_actionListWidget_itemDoubleClicked(QListWidgetItem *item);
 
     void onHotkeyStatus(QString macroName, bool success, QString message);
 

@@ -12,6 +12,8 @@ public:
     void execute() override;
     QString description() const override;
     QJsonObject toJson() const override;
+    QString getPath() const { return folderPath; }
+    void setPath(const QString& path) { folderPath = path; }
 
 private:
     QString folderPath;

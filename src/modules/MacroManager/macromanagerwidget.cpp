@@ -19,6 +19,7 @@ MacroManagerWidget::MacroManagerWidget(MacroManager* manager, const ModuleInfo& 
     connect(manager, &MacroManager::macroAdded, this, &MacroManagerWidget::onMacroAdded);
     connect(manager, &MacroManager::macroRemoved, this, &MacroManagerWidget::onMacroRemoved);
     connect(manager, &MacroManager::hotkeyStatus, this, &MacroManagerWidget::onHotkeyStatus);
+    // connect(ui->actionListWidget, &QListWidget::itemDoubleClicked, this, &MacroManagerWidget::on_actionListWidget_itemDoubleClicked);
 
     ui->rightPanel->setEnabled(false);
 
@@ -60,13 +61,33 @@ void MacroManagerWidget::onMacroAdded(QSharedPointer<Macro> macro)
     ui->macroListWidget->setCurrentItem(item);
 }
 
+void MacroManagerWidget::on_actionListWidget_itemDoubleClicked(QListWidgetItem *item)
+{
+    if (!item || !currentMacro) return;
+
+    QSharedPointer<Action> actionToEdit = item->data(Qt::UserRole).value<QSharedPointer<Action>>();
+    if (!actionToEdit) return;
+
+    AddActionDialog dialog(this);
+    dialog.setAction(actionToEdit);
+
+    if (dialog.exec() == QDialog::Accepted) {
+        dialog.getAction();
+        item->setText(actionToEdit->description());
+        // updateActionList();
+        emit manager->macroEdited(currentMacro);
+
+        qDebug() << "Action edited successfully.";
+    } else {
+        qDebug() << "Action editing cancelled.";
+    }
+}
+
 void MacroManagerWidget::on_addMacroButton_clicked()
 {
     QSharedPointer<Macro> macro = QSharedPointer<Macro>::create();
-    macro->name = "New Macro"; // default name
+    macro->name = "New Macro";
 
-    // Tell the manager to add it. The manager will emit `macroAdded`,
-    // which `onMacroAdded` slot will catch, updating the UI.
     manager->addMacro(macro);
 }
 
@@ -127,11 +148,6 @@ void MacroManagerWidget::on_executeMacroButton_clicked()
 
 void MacroManagerWidget::on_removeMacroButton_clicked()
 {
-    // TODO: Implement this
-    // 1. Get current item
-    // 2. Get QSharedPointer<Macro> from its data
-    // 3. Call manager->removeMacro(macro)
-    // 4. Implement the onMacroRemoved slot to remove item from list
 
     QListWidgetItem* currentItem = ui->macroListWidget->currentItem();
     if (!currentItem) return; // Nothing selected
@@ -140,19 +156,12 @@ void MacroManagerWidget::on_removeMacroButton_clicked()
     QSharedPointer<Macro> macro = currentItem->data(Qt::UserRole).value<QSharedPointer<Macro>>();
 
     if (macro) {
-        // Tell the manager to remove it. The manager will
-        // emit macroRemoved, which onMacroRemoved slot
-        // will catch, updating the UI.
         manager->removeMacro(macro);
     }
 }
 
 void MacroManagerWidget::on_removeActionButton_clicked()
 {
-    // TODO: Implement this
-    // 1. Get selected action from ui->actionListWidget
-    // 2. Remove it from currentMacro->actions
-    // 3. Remove it from the ui->actionListWidget
 
     if (!currentMacro) return;
 
@@ -178,7 +187,6 @@ void MacroManagerWidget::onMacroRemoved(QSharedPointer<Macro> macro)
         QSharedPointer<Macro> itemMacro = item->data(Qt::UserRole).value<QSharedPointer<Macro>>();
 
         if (itemMacro == macro) {
-            // found it. Remove it from the list and delete it.
             delete ui->macroListWidget->takeItem(i);
             break;
         }

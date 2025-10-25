@@ -75,7 +75,7 @@
         <item>
          <widget class="QLabel" name="label">
           <property name="text">
-           <string>On another device on the same Wi-Fi, open a web browser and go to the URL above, or scan the QR code. This page allows file upload/download and receives clipboard updates from this PC.</string> </property>
+           <string>&lt;b&gt;For File Transfer &amp; Basic Clipboard View:&lt;/b&gt;&lt;br&gt;On another device (phone, tablet, laptop) on the same Wi-Fi, open its web browser and go to the URL above, or scan the QR code.&lt;br&gt;&lt;br&gt;This web page allows file upload/download and shows clipboard text sent from this PC.</string> </property>
           <property name="wordWrap">
            <bool>true</bool>
           </property>
