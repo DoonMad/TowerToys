@@ -82,6 +82,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         src/modules/ClipboardSync/clipboardsyncwidget.cpp
         src/modules/ClipboardSync/clipboardsyncwidget.ui
         src/core/Actions/openvscodefolderaction.cpp src/core/Actions/openvscodefolderaction.h
+        src/core/Actions/openfolderaction.h src/core/Actions/openfolderaction.cpp
+        src/core/Actions/runcommandaction.h src/core/Actions/runcommandaction.cpp
         src/ui/settingswidget.h
         src/ui/settingswidget.cpp
         src/ui/settingswidget.ui

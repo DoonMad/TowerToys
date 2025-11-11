@@ -1,150 +1,265 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <ui version="4.0">
+
  <class>AddActionDialog</class>
+
  <widget class="QDialog" name="AddActionDialog">
+
   <property name="geometry">
+
    <rect>
+
     <x>0</x>
+
     <y>0</y>
-    <width>450</width> <height>200</height> </rect>
+
+    <width>450</width>
+
+    <height>200</height>
+
+   </rect>
+
   </property>
+
   <property name="windowTitle">
+
    <string>Add New Action</string>
+
   </property>
+
   <layout class="QVBoxLayout" name="verticalLayout_3">
+
    <item>
+
     <widget class="QLabel" name="label">
+
      <property name="text">
+
       <string>Action Type:</string>
+
      </property>
+
     </widget>
+
    </item>
+
    <item>
+
     <widget class="QComboBox" name="actionTypeCombo"/>
+
    </item>
+
+<item>
+     <widget class="QStackedWidget" name="stackedWidget">
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="pageOpenApp">
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QLineEdit" name="appPathEdit">
+          <property name="placeholderText">
+           <string>Enter path to application...</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="browseAppButton">
+          <property name="text">
+           <string>Browse...</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="pageOpenUrl">
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <widget class="QLineEdit" name="urlEdit">
+          <property name="placeholderText">
+           <string>Enter URL (e.g., http://google.com)</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="pageTypeKeystroke"> <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="QLineEdit" name="keystrokeEdit">
+          <property name="placeholderText">
+           <string>Enter text to type...</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="pageOpenVSCodeFolder">
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <widget class="QLineEdit" name="vsCodeFolderPathEdit">
+          <property name="placeholderText">
+           <string>Enter path to folder...</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="browseVSCodeFolderButton">
+          <property name="text">
+           <string>Browse...</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="pageOpenFolder"> <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <item>
+         <widget class="QLineEdit" name="folderPathEdit">
+          <property name="placeholderText">
+           <string>Enter path to folder...</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="browseFolderButton">
+          <property name="text">
+           <string>Browse...</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="pageRunCommand"> <layout class="QVBoxLayout" name="verticalLayout_4">
+        <item>
+         <widget class="QLineEdit" name="commandLineEdit">
+          <property name="placeholderText">
+           <string>Enter command (e.g., cmd.exe /c start notepad.exe)</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+
    <item>
-    <widget class="QStackedWidget" name="stackedWidget">
-     <property name="currentIndex">
-      <number>0</number>
-     </property>
-     <widget class="QWidget" name="pageOpenApp">
-      <layout class="QHBoxLayout" name="horizontalLayout">
-       <item>
-        <widget class="QLineEdit" name="appPathEdit">
-         <property name="placeholderText">
-          <string>Enter path to application...</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="browseAppButton">
-         <property name="text">
-          <string>Browse...</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="pageOpenUrl">
-      <layout class="QVBoxLayout" name="verticalLayout">
-       <item>
-        <widget class="QLineEdit" name="urlEdit">
-         <property name="placeholderText">
-          <string>Enter URL (e.g., http://google.com)</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="pageTypeKeystroke">
-      <layout class="QVBoxLayout" name="verticalLayout_2">
-       <item>
-        <widget class="QLineEdit" name="keystrokeEdit">
-         <property name="placeholderText">
-          <string>Enter text to type...</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="pageOpenVSCodeFolder">
-      <layout class="QHBoxLayout" name="horizontalLayout_2">
-       <item>
-        <widget class="QLineEdit" name="vsCodeFolderPathEdit">
-         <property name="placeholderText">
-          <string>Enter path to folder...</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="browseVSCodeFolderButton">
-         <property name="text">
-          <string>Browse...</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-     </widget>
-   </item>
-   <item>
+
     <spacer name="verticalSpacer">
+
      <property name="orientation">
+
       <enum>Qt::Vertical</enum>
+
      </property>
+
      <property name="sizeHint" stdset="0">
+
       <size>
+
        <width>20</width>
+
        <height>40</height>
+
       </size>
+
      </property>
+
     </spacer>
+
    </item>
+
    <item>
+
     <widget class="QDialogButtonBox" name="buttonBox">
+
      <property name="orientation">
+
       <enum>Qt::Horizontal</enum>
+
      </property>
+
      <property name="standardButtons">
+
       <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+
      </property>
+
     </widget>
+
    </item>
+
   </layout>
+
  </widget>
+
  <resources/>
+
  <connections>
+
   <connection>
+
    <sender>buttonBox</sender>
+
    <signal>accepted()</signal>
+
    <receiver>AddActionDialog</receiver>
+
    <slot>accept()</slot>
+
    <hints>
+
     <hint type="sourcelabel">
+
      <x>248</x>
+
      <y>254</y>
+
     </hint>
+
     <hint type="destinationlabel">
+
      <x>157</x>
+
      <y>274</y>
+
     </hint>
+
    </hints>
+
   </connection>
+
   <connection>
+
    <sender>buttonBox</sender>
+
    <signal>rejected()</signal>
+
    <receiver>AddActionDialog</receiver>
+
    <slot>reject()</slot>
+
    <hints>
+
     <hint type="sourcelabel">
+
      <x>316</x>
+
      <y>260</y>
+
     </hint>
+
     <hint type="destinationlabel">
+
      <x>286</x>
+
      <y>274</y>
+
     </hint>
+
    </hints>
+
   </connection>
+
  </connections>
+
 </ui>

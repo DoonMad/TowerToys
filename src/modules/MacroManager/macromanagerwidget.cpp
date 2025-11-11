@@ -194,7 +194,7 @@ void MacroManagerWidget::onMacroRemoved(QSharedPointer<Macro> macro)
 }
 
 
-// --- Helper Functions ---
+// Helper Functions
 
 void MacroManagerWidget::updateDetailPane()
 {

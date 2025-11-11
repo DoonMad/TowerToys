@@ -11,6 +11,8 @@
 #include "Actions/openurlaction.h"
 #include "Actions/typekeystrokeaction.h"
 #include "Actions/openvscodefolderaction.h"
+#include "Actions/openfolderaction.h"
+#include "Actions/runcommandaction.h"
 
 MacroManager::MacroManager(QObject *parent)
     : QObject{parent}
@@ -107,14 +109,11 @@ void MacroManager::loadMacros()
         macro->name = macroObj["name"].toString();
         macro->shortcut = macroObj["shortcut"].toString();
 
-        // Loop over this macro's "actions" array
         QJsonArray actionsArray = macroObj["actions"].toArray();
         for (const QJsonValue& actionVal : actionsArray) {
             QJsonObject actionObj = actionVal.toObject();
             QString type = actionObj["type"].toString();
 
-            // This is the "Action Factory"
-            // It reads the "type" string and creates the correct C++ object
             if (type == "OpenAppAction") {
                 macro->addAction(QSharedPointer<OpenAppAction>::create(actionObj["path"].toString()));
             } else if (type == "OpenURLAction") {
@@ -123,6 +122,10 @@ void MacroManager::loadMacros()
                 macro->addAction(QSharedPointer<TypeKeystrokeAction>::create(actionObj["text"].toString()));
             } else if (type == "OpenVSCodeFolderAction") {
                 macro->addAction(QSharedPointer<OpenVSCodeFolderAction>::create(actionObj["path"].toString()));
+            } else if (type == "OpenFolderAction") {
+                macro->addAction(QSharedPointer<OpenFolderAction>::create(actionObj["path"].toString()));
+            } else if (type == "RunCommandAction") {
+                macro->addAction(QSharedPointer<RunCommandAction>::create(actionObj["command"].toString()));
             } else {
                 qWarning() << "Unknown action type in macros.json:" << type;
             }

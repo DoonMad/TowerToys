@@ -4,6 +4,8 @@
 #include "Actions/openurlaction.h"
 #include "Actions/typekeystrokeaction.h"
 #include "Actions/openvscodefolderaction.h"
+#include "Actions/openfolderaction.h"
+#include "Actions/runcommandaction.h"
 #include <QFileDialog>
 
 AddActionDialog::AddActionDialog(QWidget *parent)
@@ -12,7 +14,13 @@ AddActionDialog::AddActionDialog(QWidget *parent)
 {
     ui->setupUi(this);
 
-    ui->actionTypeCombo->addItems({"Open App", "Open URL", "Type Keystroke", "Open Folder in VS Code"});
+    ui->actionTypeCombo->addItems({"Open App",
+                                   "Open URL",
+                                   "Type Keystroke",
+                                   "Open Folder in VS Code",
+                                   "Open Folder",
+                                   "Run Command"
+    });
     connect(ui->actionTypeCombo, QOverload<int>::of(&QComboBox::currentIndexChanged), ui->stackedWidget, &QStackedWidget::setCurrentIndex);
     ui->stackedWidget->setCurrentIndex(0);
 }
@@ -53,6 +61,17 @@ QSharedPointer<Action> AddActionDialog::getAction() const
             if (openVSCode && !path.isEmpty()) {
                 openVSCode->setPath(path);
             } else { return nullptr; }
+        } else if (actionType == "Open Folder") {
+            auto openFolder = qSharedPointerDynamicCast<OpenFolderAction>(editingAction);
+            QString path = ui->folderPathEdit->text();
+            if (openFolder && !path.isEmpty()) { openFolder->setPath(path); }
+            else { return nullptr; }
+        }
+        else if (actionType == "Run Command") {
+            auto runCmd = qSharedPointerDynamicCast<RunCommandAction>(editingAction);
+            QString cmd = ui->commandLineEdit->text();
+            if (runCmd && !cmd.isEmpty()) { runCmd->setCommand(cmd); }
+            else { return nullptr; }
         } else {
             qWarning() << "getAction (Edit Mode): Unknown action type!";
             return nullptr; // Unknown type during edit
@@ -81,6 +100,15 @@ QSharedPointer<Action> AddActionDialog::getAction() const
             QString path = ui->vsCodeFolderPathEdit->text();
             if (path.isEmpty()) return nullptr;
             return QSharedPointer<OpenVSCodeFolderAction>::create(path);
+        } else if (actionType == "Open Folder") {
+            QString path = ui->folderPathEdit->text();
+            if (path.isEmpty()) return nullptr;
+            return QSharedPointer<OpenFolderAction>::create(path);
+        }
+        else if (actionType == "Run Command") {
+            QString cmd = ui->commandLineEdit->text();
+            if (cmd.isEmpty()) return nullptr;
+            return QSharedPointer<RunCommandAction>::create(cmd);
         } else {
             qWarning() << "getAction (Create Mode): Unknown action type!";
             return nullptr;
@@ -92,11 +120,34 @@ QSharedPointer<Action> AddActionDialog::getAction() const
 
 void AddActionDialog::setAction(QSharedPointer<Action> actionToEdit)
 {
-    if (!actionToEdit) return;
+    if (!actionToEdit) {
+        qWarning() << "setAction called with null actionToEdit.";
+        editingAction = nullptr;
+        // Optionally, reset UI to default "create new action" state if action is null
+        ui->actionTypeCombo->setEnabled(true);
+        ui->actionTypeCombo->setCurrentIndex(0);
+        ui->appPathEdit->clear();
+        ui->urlEdit->clear();
+        ui->keystrokeEdit->clear();
+        ui->vsCodeFolderPathEdit->clear();
+        ui->folderPathEdit->clear();
+        ui->commandLineEdit->clear();
+        return;
+    }
 
     editingAction = actionToEdit;
 
+    // --- IMPORTANT: Clear all input fields first to prevent old values from showing ---
+    ui->appPathEdit->clear();
+    ui->urlEdit->clear();
+    ui->keystrokeEdit->clear();
+    ui->vsCodeFolderPathEdit->clear();
+    ui->folderPathEdit->clear();
+    ui->commandLineEdit->clear();
 
+    // qWarning() << "setAction received action of type:" << actionToEdit->description(); // Debugging
+
+    // --- Set combo box and stacked widget, then populate fields ---
     if (auto openApp = qSharedPointerDynamicCast<OpenAppAction>(actionToEdit)) {
         ui->actionTypeCombo->setCurrentText("Open App");
         ui->stackedWidget->setCurrentIndex(0);
@@ -110,16 +161,27 @@ void AddActionDialog::setAction(QSharedPointer<Action> actionToEdit)
         ui->stackedWidget->setCurrentIndex(2);
         ui->keystrokeEdit->setText(typeKey->getText());
     } else if (auto openVSCode = qSharedPointerDynamicCast<OpenVSCodeFolderAction>(actionToEdit)) {
-        ui->actionTypeCombo->setCurrentText("Open VS Code Folder");
+        ui->actionTypeCombo->setCurrentText("Open Folder in VS Code");
         ui->stackedWidget->setCurrentIndex(3);
         ui->vsCodeFolderPathEdit->setText(openVSCode->getPath());
+    } else if (auto openFolder = qSharedPointerDynamicCast<OpenFolderAction>(actionToEdit)) {
+        ui->actionTypeCombo->setCurrentText("Open Folder");
+        ui->stackedWidget->setCurrentIndex(4);
+        ui->folderPathEdit->setText(openFolder->getPath());
+    } else if (auto runCmd = qSharedPointerDynamicCast<RunCommandAction>(actionToEdit)) {
+        ui->actionTypeCombo->setCurrentText("Run Command");
+        ui->stackedWidget->setCurrentIndex(5);
+        ui->commandLineEdit->setText(runCmd->getCommand());
     } else {
-        qWarning() << "AddActionDialog::setAction - Unknown action type!";
-        editingAction = nullptr; // Clear if type is unknown
+        qWarning() << "AddActionDialog::setAction - Unknown action type for editing!";
+        editingAction = nullptr;
+        // Optionally reset UI to default state if type is unknown
+        ui->actionTypeCombo->setEnabled(true);
+        ui->actionTypeCombo->setCurrentIndex(0);
         return;
     }
 
-    // Disable changing the type when editing
+    // Disable changing the type when editing a specific action
     ui->actionTypeCombo->setEnabled(false);
 }
 
@@ -148,6 +210,19 @@ void AddActionDialog::on_browseVSCodeFolderButton_clicked()
 
     if (!dirPath.isEmpty()) {
         ui->vsCodeFolderPathEdit->setText(dirPath);
+    }
+}
+
+void AddActionDialog::on_browseFolderButton_clicked()
+{
+    QString dirPath = QFileDialog::getExistingDirectory(
+        this,
+        "Select Folder",
+        QString(),
+        QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks
+        );
+    if (!dirPath.isEmpty()) {
+        ui->folderPathEdit->setText(dirPath);
     }
 }
 

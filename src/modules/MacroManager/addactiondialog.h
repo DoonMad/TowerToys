@@ -28,6 +28,7 @@ public:
 private slots:
     void on_browseAppButton_clicked();
     void on_browseVSCodeFolderButton_clicked();
+    void on_browseFolderButton_clicked();
 
 private:
     Ui::AddActionDialog *ui;
