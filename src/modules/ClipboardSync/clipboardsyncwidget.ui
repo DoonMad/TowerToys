@@ -73,7 +73,7 @@
    <item>
     <widget class="QLabel" name="appInfoLabel">
      <property name="text">
-      <string>&lt;b&gt;Companion App (Recommended for Sync):&lt;/b&gt;&lt;br&gt;For reliable background sync install the ShowerToys Companion app on your Android device.&lt;br&gt;&lt;br&gt;&lt;b&gt;Connection:&lt;/b&gt; Open the app and scan the QR code in the 'Local File Share' module.&lt;br&gt;&lt;br&gt;&lt;a href=&quot;https://github.com/DoonMad/ShowerToys-Companion/releases/download/v1.0.0/app-debug.apk&quot;&gt;Download Companion App APK (v1.0.0)&lt;/a&gt;</string>
+      <string>&lt;b&gt;Companion App (Recommended for Sync):&lt;/b&gt;&lt;br&gt;For reliable background sync install the TowerToys Companion app on your Android device.&lt;br&gt;&lt;br&gt;&lt;b&gt;Connection:&lt;/b&gt; Open the app and scan the QR code in the 'Local File Share' module.&lt;br&gt;&lt;br&gt;&lt;a href=&quot;https://github.com/DoonMad/TowerToys-Companion/releases/download/v1.0.0/app-debug.apk&quot;&gt;Download Companion App APK (v1.0.0)&lt;/a&gt;</string>
      </property>
      <property name="wordWrap">
       <bool>true</bool>

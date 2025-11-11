@@ -12,8 +12,6 @@ void RunCommandAction::execute()
     qDebug() << "Attempting to execute command:" << command;
 
     // Split the command string by spaces.
-    // NOTE: This is a simple split and won't handle file paths with spaces correctly.
-    // For v1, this is okay. A robust solution would need more complex parsing.
     QStringList parts = command.split(' ');
 
     if (parts.isEmpty()) {
@@ -24,7 +22,7 @@ void RunCommandAction::execute()
     QString program = parts.takeFirst(); // e.g., "cmd" or "ipconfig"
 
     // The rest are the arguments.
-    QStringList arguments = parts; // e.g., ["/k", "ipconfig"] or []
+    QStringList arguments = parts;
 
     // On Windows, if the user types "cmd", they mean "cmd.exe"
     if (program.toLower() == "cmd") {
@@ -32,7 +30,6 @@ void RunCommandAction::execute()
     }
 
     // Try to run the program with its arguments.
-    // This overload correctly handles separating the program from args.
     bool success = QProcess::startDetached(program, arguments);
 
     if (success) {
@@ -42,8 +39,6 @@ void RunCommandAction::execute()
         qWarning() << "Attempting fallback: running the whole string (might fail).";
 
         // Fallback for simple cases like "notepad.exe"
-        // This might still fail for "ipconfig" (runs in terminal)
-        // or "cmd /k ..." (parser error)
         QProcess::startDetached(command);
     }
 }

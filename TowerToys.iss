@@ -37,7 +37,7 @@ DisableProgramGroupPage=yes
 ;PrivilegesRequired=lowest
 OutputDir=A:\Programming\Projects\TowerToys\installer
 OutputBaseFilename=TowerToys-1.0.0-setup
-SetupIconFile=A:\Programming\Projects\TowerToys\resources\icons\app_icon.ico
+SetupIconFile=A:\Programming\Projects\TowerToys\icon.ico
 SolidCompression=yes
 WizardStyle=modern
 
