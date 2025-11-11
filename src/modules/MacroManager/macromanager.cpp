@@ -42,7 +42,7 @@ QString MacroManager::getSavePath() const
     // Finding a standard, writable location for app data
     QString path = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
 
-    // On Windows, this is C:/Users/<User>/AppData/Roaming/ShowerToys
+    // On Windows, this is C:/Users/<User>/AppData/Roaming/TowerToys
     QDir dir(path);
     if (!dir.exists()) {
         dir.mkpath("."); // Createing a folder if it doesn't exist

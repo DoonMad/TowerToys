@@ -34,7 +34,7 @@ MainWindow::MainWindow(QWidget *parent)
     , stackWidget(nullptr)
 {
     ui->setupUi(this);
-    setWindowTitle("ShowerToys");
+    setWindowTitle("TowerToys");
 
     // Create and initialize core components
     controller = new AppController(this, this);

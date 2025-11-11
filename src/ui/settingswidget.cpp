@@ -86,7 +86,7 @@ void SettingsWidget::setStartupRegistry(bool enabled)
     // Use QSettings to access the specific registry key
     QSettings registrySettings("HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", QSettings::NativeFormat);
 
-    QString appName = QApplication::applicationName(); // "ShowerToys"
+    QString appName = QApplication::applicationName(); // "TowerToys"
     QString appPath = QDir::toNativeSeparators(QApplication::applicationFilePath()); // Full path to .exe
 
     if (enabled) {

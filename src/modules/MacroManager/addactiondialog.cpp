@@ -47,7 +47,7 @@ QSharedPointer<Action> AddActionDialog::getAction() const
             if (typeKey && !text.isEmpty()) {
                 typeKey->setText(text);
             } else { return nullptr; }
-        } else if (actionType == "Open VS Code Folder") {
+        } else if (actionType == "Open Folder in VS Code") {
             auto openVSCode = qSharedPointerDynamicCast<OpenVSCodeFolderAction>(editingAction);
             QString path = ui->vsCodeFolderPathEdit->text();
             if (openVSCode && !path.isEmpty()) {
@@ -77,7 +77,7 @@ QSharedPointer<Action> AddActionDialog::getAction() const
             QString text = ui->keystrokeEdit->text();
             if (text.isEmpty()) return nullptr;
             return QSharedPointer<TypeKeystrokeAction>::create(text);
-        } else if (actionType == "Open VS Code Folder") {
+        } else if (actionType == "Open Folder in VS Code") {
             QString path = ui->vsCodeFolderPathEdit->text();
             if (path.isEmpty()) return nullptr;
             return QSharedPointer<OpenVSCodeFolderAction>::create(path);

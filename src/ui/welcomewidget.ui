@@ -23,7 +23,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>&lt;h2&gt;Welcome to Showertoys!&lt;/h2&gt;Select a module from the left to begin.</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;h2 style=&quot; margin-top:16px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:x-large; font-weight:700;&quot;&gt;Welcome to TowerToys!&lt;/span&gt;&lt;/h2&gt;&lt;p&gt;Select a module from the left to begin.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </widget>
  </widget>

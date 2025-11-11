@@ -6,7 +6,7 @@
 int main(int argc, char *argv[])
 {
     QCoreApplication::setOrganizationName("DoonMadOrg");
-    QCoreApplication::setApplicationName("ShowerToys");
+    QCoreApplication::setApplicationName("TowerToys");
 
     QApplication a(argc, argv);
     a.setQuitOnLastWindowClosed(false);
