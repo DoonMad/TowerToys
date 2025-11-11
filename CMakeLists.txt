@@ -85,6 +85,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         src/ui/settingswidget.h
         src/ui/settingswidget.cpp
         src/ui/settingswidget.ui
+        TowerToys.rc
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET TowerToys APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

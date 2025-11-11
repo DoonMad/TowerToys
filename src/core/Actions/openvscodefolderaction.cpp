@@ -17,17 +17,14 @@ void OpenVSCodeFolderAction::execute()
     // QUrl::fromLocalFile handles spaces and platform differences correctly.
     QString folderUri = QUrl::fromLocalFile(folderPath).toString();
 
-    // Arguments for the 'code' command
     QStringList arguments;
     arguments << "--folder-uri" << folderUri;
 
-    // --- TRY THIS ---
     bool success = QProcess::startDetached("code.cmd", arguments);
-    // ---
 
     if (!success) {
         qWarning() << "OpenVSCodeFolderAction: Failed to start 'code.cmd'. Is VS Code installed and in PATH?";
-        // Fallback to just 'code' ---
+        // Fallback to just 'code'
         qWarning() << "OpenVSCodeFolderAction: Trying 'code'...";
         success = QProcess::startDetached("code", arguments);
         if(!success) {

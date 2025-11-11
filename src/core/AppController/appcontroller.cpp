@@ -87,7 +87,7 @@ void AppController::onSystemClipboardChanged()
 void AppController::setupTray(){
     trayIcon = new QSystemTrayIcon(this);
     trayIcon->setIcon(QIcon(":/resources/icons/app_icon.png"));
-    trayIcon->setToolTip("ShowerToys");
+    trayIcon->setToolTip("TowerToys");
 
     trayMenu = new QMenu(nullptr);
     trayMenu->addAction("Open", this, [=](){
