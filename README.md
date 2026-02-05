@@ -2,6 +2,8 @@
 
 A modular desktop productivity utility for Windows inspired by Microsoft PowerToys, built with **C++ and Qt**.
 
+🌐 **Project Website:** https://towertoys.vercel.app
+
 ---
 
 ## Overview
@@ -49,9 +51,7 @@ Core principles:
 
 ### 📋➡️📱 Clipboard Sync (PC → Device)
 - Automatically pushes text copied on the PC to connected devices
-- Works via:
-  - Web clients
-  - Android companion app
+- Works via Android companion app
 - Requires Local File Share server to be running
 
 ---
