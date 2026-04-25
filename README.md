@@ -103,7 +103,7 @@ Download the latest Windows installer:
 ### 📱 Companion App (Android)
 For clipboard sync, install the Android companion app:
 
-- **[TowerToys Companion – APK Download](https://github.com/DoonMad/towertoys-companion/releases/latest)**
+- **[TowerToys Companion – APK Download](https://github.com/DoonMad/TowerToys-Companion/releases/latest)**
 
 
 
