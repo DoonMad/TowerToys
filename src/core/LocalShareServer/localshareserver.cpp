@@ -115,13 +115,17 @@ void LocalShareServer::startServer()
     }
 
     if (wsStarted && httpBound) {
-        QString ip = getLocalIpAddress();
-        if(ip == "Not Found") {
+        QStringList ips = getLocalIpAddresses();
+        if(ips.isEmpty()) {
             emit serverStatusChanged(false, "Error: No network connection.");
         } else {
-            QString url = QString("http://%1:%2").arg(ip).arg(m_httpPort);
-            emit serverStatusChanged(true, url);
-            qDebug() << "LocalShareServer started at" << url;
+            QStringList urls;
+            for (const QString &ip : ips) {
+                urls.append(QString("http://%1:%2").arg(ip).arg(m_httpPort));
+            }
+            QString finalUrlString = urls.join("\n");
+            emit serverStatusChanged(true, finalUrlString);
+            qDebug() << "LocalShareServer started at:\n" << finalUrlString;
         }
     } else {
         stopServer();
@@ -147,22 +151,47 @@ void LocalShareServer::pushTextToClients(const QString &text)
     }
 }
 
-QString LocalShareServer::getLocalIpAddress()
+QStringList LocalShareServer::getLocalIpAddresses()
 {
+    QStringList validIps;
+
+    // First pass: look for a real physical adapter (Ethernet or Wi-Fi)
     for (const QNetworkInterface &interface : QNetworkInterface::allInterfaces()) {
-        // Get all address entries *for that interface
+        // Skip virtual and loopback interfaces
+        if (!interface.isValid() || interface.type() == QNetworkInterface::Loopback || interface.type() == QNetworkInterface::Virtual) {
+            continue;
+        }
+
+        QString name = interface.humanReadableName().toLower();
+        // Additional filtering for common virtual adapters that might not report as Virtual type
+        if (name.contains("vmware") || name.contains("virtual") || name.contains("vbox") || name.contains("wsl") || name.contains("vethernet") || name.contains("hyper-v")) {
+            continue;
+        }
+
         for (const QNetworkAddressEntry &entry : interface.addressEntries()) {
             const QHostAddress &addr = entry.ip();
-            // Check if it's an IPv4 address and not a loopback (127.0.0.1)
-            if (addr.protocol() == QAbstractSocket::IPv4Protocol &&
-                !addr.isLoopback() &&
-                !addr.toString().startsWith("169.254.")) // checking for bad addresses
-            {
-                return addr.toString();
+            if (addr.protocol() == QAbstractSocket::IPv4Protocol && !addr.isLoopback() && !addr.toString().startsWith("169.254.")) {
+                validIps.append(addr.toString());
             }
         }
     }
-    return QString("Not Found");
+
+    // If we found good physical IPs, return them.
+    if (!validIps.isEmpty()) {
+        return validIps;
+    }
+
+    // Fallback: if we didn't find a "real" adapter, just return all valid IPv4s
+    for (const QNetworkInterface &interface : QNetworkInterface::allInterfaces()) {
+        for (const QNetworkAddressEntry &entry : interface.addressEntries()) {
+            const QHostAddress &addr = entry.ip();
+            if (addr.protocol() == QAbstractSocket::IPv4Protocol && !addr.isLoopback() && !addr.toString().startsWith("169.254.")) {
+                validIps.append(addr.toString());
+            }
+        }
+    }
+
+    return validIps;
 }
 
 // --- PRIVATE HANDLERS ---

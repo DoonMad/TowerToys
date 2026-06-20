@@ -55,9 +55,13 @@ void FileShareWidget::onServerStatusChanged(bool running, const QString &serverU
 {
     if (running) {
         ui->toggleServerButton->setText("Stop Server");
-        ui->urlLabel->setText(QString("Connect at: %1").arg(serverUrl));
+        ui->urlLabel->setText(QString("Connect at:\n%1").arg(serverUrl));
         // ui->serverInfoGroup->setVisible(true);
-        generateQrCode(serverUrl);
+        
+        // The serverUrl might contain multiple URLs separated by \n.
+        // We must only encode ONE URL into the QR code so the phone's scanner can read it.
+        QString firstUrl = serverUrl.split('\n').first();
+        generateQrCode(firstUrl);
     } else {
         ui->toggleServerButton->setChecked(false); // Ensure button is "off"
         ui->toggleServerButton->setText("Start Server");

@@ -20,7 +20,7 @@ public:
     explicit LocalShareServer(QObject *parent = nullptr);
     ~LocalShareServer();
 
-    static QString getLocalIpAddress();
+    static QStringList getLocalIpAddresses();
     void setFileShareManager(FileShareManager* manager);
     void setClipboardSyncManager(ClipboardSyncManager* manager);
 
