@@ -19,6 +19,7 @@ private slots:
     // Slot for when the combo box selection changes
     void onStyleComboBoxCurrentIndexChanged(int index);
     void onStartupCheckBoxToggled(bool checked);
+    void onApiKeyChanged(const QString &text);
 
 private:
     void loadSettings();

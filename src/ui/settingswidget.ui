@@ -56,6 +56,39 @@
     </widget>
    </item>
    <item>
+    <widget class="QGroupBox" name="aiGroupBox">
+     <property name="title">
+      <string>AI Assistant</string>
+     </property>
+     <layout class="QVBoxLayout" name="aiLayout">
+      <item>
+       <widget class="QLabel" name="apiKeyLabel">
+        <property name="text">
+         <string>Gemini API Key:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="apiKeyLineEdit">
+        <property name="echoMode">
+         <enum>QLineEdit::Password</enum>
+        </property>
+        <property name="placeholderText">
+         <string>Enter your Gemini API Key here...</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="apiHintLabel">
+        <property name="text">
+         <string>&lt;small&gt;Required for Natural Language Macro Generation.&lt;/small&gt;</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
     <spacer name="verticalSpacer">
      <property name="orientation">
       <enum>Qt::Vertical</enum> </property>
