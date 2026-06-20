@@ -96,17 +96,9 @@ void MainWindow::setupDynamicUI() {
     QWidget *welcomePage = new WelcomeWidget(stackWidget);
     stackWidget->addWidget(welcomePage);
 
-    // Add Settings Widget
-    SettingsWidget *settings = new SettingsWidget(sidePanel);
-    sideLayout->addWidget(settings);
-    sideLayout->setStretchFactor(settings, 0); // Don't stretch vertically
-
-    // Add Separator Line
-    QFrame *line = new QFrame(sidePanel); // Parent it
-    line->setFrameShape(QFrame::HLine);
-    line->setFrameShadow(QFrame::Sunken);
-    sideLayout->addWidget(line);
-    sideLayout->setStretchFactor(line, 0); // Don't stretch vertically
+    // Add Settings Widget to Stack
+    SettingsWidget *settings = new SettingsWidget(stackWidget);
+    stackWidget->addWidget(settings);
 
     // Add Module Buttons
     QWidget* buttonContainer = new QWidget(sidePanel); // Parent container for buttons
@@ -154,6 +146,23 @@ void MainWindow::setupDynamicUI() {
     }
 
     buttonLayout->addStretch(1); // Push buttons up within their container
+    
+    // Add Settings Button at the bottom
+    QPushButton* settingsBtn = new QPushButton("⚙ Settings", buttonContainer);
+    settingsBtn->setCheckable(true);
+    settingsBtn->setFixedHeight(40);
+    settingsBtn->setStyleSheet(
+        "QPushButton { text-align: left; padding-left: 8px; padding-top: 4px; padding-bottom: 4px; border: 1px solid transparent; background-color: transparent; border-radius: 10px }"
+        "QPushButton:checked { background-color: #007bff; border: 1px solid #0056b3; color: white; }"
+        "QPushButton:hover:!checked { background-color: #d1d5db; border: 1px solid #adb5bd; color: black; }"
+    );
+    connect(settingsBtn, &QPushButton::clicked, this, [this, settings, settingsBtn]() {
+        stackWidget->setCurrentWidget(settings);
+        updateButtonSelection(settingsBtn);
+    });
+    // Add to map so updateButtonSelection handles it
+    moduleButtons["Settings"] = settingsBtn;
+    buttonLayout->addWidget(settingsBtn);
 
     sideLayout->addWidget(buttonContainer); // Add button container to main side layout
     sideLayout->setStretchFactor(buttonContainer, 1); // Allow button container to stretch
