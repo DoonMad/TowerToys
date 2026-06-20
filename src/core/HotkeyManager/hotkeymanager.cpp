@@ -36,6 +36,15 @@ void HotkeyManager::registerMacro(QSharedPointer<Macro> macro)
         return;
     }
 
+    // Require at least one modifier key (Ctrl, Alt, Shift, Meta)
+    if (!macro->shortcut.contains("Ctrl") && 
+        !macro->shortcut.contains("Alt") && 
+        !macro->shortcut.contains("Shift") && 
+        !macro->shortcut.contains("Meta")) {
+        emit hotkeyStatusChanged(macro, false, "Shortcut must include a modifier key (Ctrl, Alt, Shift, Win).");
+        return;
+    }
+
     if (blacklist.contains(sequence)) {
         emit hotkeyStatusChanged(macro, false, "Shortcut is reserved by the system.");
         return;

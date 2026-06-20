@@ -6,7 +6,11 @@
 #include "Actions/openvscodefolderaction.h"
 #include "Actions/openfolderaction.h"
 #include "Actions/runcommandaction.h"
+#include "Actions/delayaction.h"
 #include <QFileDialog>
+#include <QVBoxLayout>
+#include <QLabel>
+#include <QSpinBox>
 
 AddActionDialog::AddActionDialog(QWidget *parent)
     : QDialog(parent)
@@ -19,8 +23,23 @@ AddActionDialog::AddActionDialog(QWidget *parent)
                                    "Type Keystroke",
                                    "Open Folder in VS Code",
                                    "Open Folder",
-                                   "Run Command"
+                                   "Run Command",
+                                   "Delay"
     });
+
+    // Create Delay Action UI programmatically
+    QWidget* delayWidget = new QWidget(this);
+    QVBoxLayout* delayLayout = new QVBoxLayout(delayWidget);
+    QLabel* delayLabel = new QLabel("Delay Duration (milliseconds):", delayWidget);
+    QSpinBox* delaySpinBox = new QSpinBox(delayWidget);
+    delaySpinBox->setObjectName("delaySpinBox"); // Give it a name to find it later
+    delaySpinBox->setRange(1, 300000); // Up to 5 minutes
+    delaySpinBox->setValue(1000); // Default 1 second
+    delayLayout->addWidget(delayLabel);
+    delayLayout->addWidget(delaySpinBox);
+    delayLayout->addStretch();
+    ui->stackedWidget->addWidget(delayWidget);
+
     connect(ui->actionTypeCombo, QOverload<int>::of(&QComboBox::currentIndexChanged), ui->stackedWidget, &QStackedWidget::setCurrentIndex);
     ui->stackedWidget->setCurrentIndex(0);
 }
@@ -66,12 +85,17 @@ QSharedPointer<Action> AddActionDialog::getAction() const
             QString path = ui->folderPathEdit->text();
             if (openFolder && !path.isEmpty()) { openFolder->setPath(path); }
             else { return nullptr; }
-        }
-        else if (actionType == "Run Command") {
+        } else if (actionType == "Run Command") {
             auto runCmd = qSharedPointerDynamicCast<RunCommandAction>(editingAction);
             QString cmd = ui->commandLineEdit->text();
             if (runCmd && !cmd.isEmpty()) { runCmd->setCommand(cmd); }
             else { return nullptr; }
+        } else if (actionType == "Delay") {
+            auto delayAct = qSharedPointerDynamicCast<DelayAction>(editingAction);
+            QSpinBox* spinBox = ui->stackedWidget->findChild<QSpinBox*>("delaySpinBox");
+            if (delayAct && spinBox) {
+                delayAct->setDelayMs(spinBox->value());
+            } else { return nullptr; }
         } else {
             qWarning() << "getAction (Edit Mode): Unknown action type!";
             return nullptr; // Unknown type during edit
@@ -104,11 +128,16 @@ QSharedPointer<Action> AddActionDialog::getAction() const
             QString path = ui->folderPathEdit->text();
             if (path.isEmpty()) return nullptr;
             return QSharedPointer<OpenFolderAction>::create(path);
-        }
-        else if (actionType == "Run Command") {
+        } else if (actionType == "Run Command") {
             QString cmd = ui->commandLineEdit->text();
             if (cmd.isEmpty()) return nullptr;
             return QSharedPointer<RunCommandAction>::create(cmd);
+        } else if (actionType == "Delay") {
+            QSpinBox* spinBox = ui->stackedWidget->findChild<QSpinBox*>("delaySpinBox");
+            if (spinBox) {
+                return QSharedPointer<DelayAction>::create(spinBox->value());
+            }
+            return nullptr;
         } else {
             qWarning() << "getAction (Create Mode): Unknown action type!";
             return nullptr;
@@ -144,6 +173,8 @@ void AddActionDialog::setAction(QSharedPointer<Action> actionToEdit)
     ui->vsCodeFolderPathEdit->clear();
     ui->folderPathEdit->clear();
     ui->commandLineEdit->clear();
+    QSpinBox* spinBox = ui->stackedWidget->findChild<QSpinBox*>("delaySpinBox");
+    if (spinBox) spinBox->setValue(1000);
 
     // qWarning() << "setAction received action of type:" << actionToEdit->description(); // Debugging
 
@@ -172,6 +203,11 @@ void AddActionDialog::setAction(QSharedPointer<Action> actionToEdit)
         ui->actionTypeCombo->setCurrentText("Run Command");
         ui->stackedWidget->setCurrentIndex(5);
         ui->commandLineEdit->setText(runCmd->getCommand());
+    } else if (auto delayAct = qSharedPointerDynamicCast<DelayAction>(actionToEdit)) {
+        ui->actionTypeCombo->setCurrentText("Delay");
+        ui->stackedWidget->setCurrentIndex(6); // Delay widget index
+        QSpinBox* spinBox = ui->stackedWidget->findChild<QSpinBox*>("delaySpinBox");
+        if (spinBox) spinBox->setValue(delayAct->getDelayMs());
     } else {
         qWarning() << "AddActionDialog::setAction - Unknown action type for editing!";
         editingAction = nullptr;

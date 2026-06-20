@@ -13,6 +13,7 @@
 #include "Actions/openvscodefolderaction.h"
 #include "Actions/openfolderaction.h"
 #include "Actions/runcommandaction.h"
+#include "Actions/delayaction.h"
 
 MacroManager::MacroManager(QObject *parent)
     : QObject{parent}
@@ -124,6 +125,8 @@ void MacroManager::loadMacros()
                 macro->addAction(QSharedPointer<OpenFolderAction>::create(actionObj["path"].toString()));
             } else if (type == "RunCommandAction") {
                 macro->addAction(QSharedPointer<RunCommandAction>::create(actionObj["command"].toString()));
+            } else if (type == "Delay") {
+                macro->addAction(QSharedPointer<DelayAction>::create(actionObj["delayMs"].toInt()));
             } else {
                 qWarning() << "Unknown action type in macros.json:" << type;
             }

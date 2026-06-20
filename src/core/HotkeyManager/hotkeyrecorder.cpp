@@ -79,19 +79,21 @@ long long __stdcall HotkeyRecorder::LowLevelKeyboardProc(int nCode, unsigned lon
             DWORD vkCode = p->vkCode;
             
             bool isModifier = false;
-            if (vkCode == VK_LCONTROL || vkCode == VK_RCONTROL || vkCode == VK_CONTROL) { m_ctrl = true; isModifier = true; }
-            if (vkCode == VK_LMENU || vkCode == VK_RMENU || vkCode == VK_MENU) { m_alt = true; isModifier = true; }
-            if (vkCode == VK_LSHIFT || vkCode == VK_RSHIFT || vkCode == VK_SHIFT) { m_shift = true; isModifier = true; }
-            if (vkCode == VK_LWIN || vkCode == VK_RWIN) { m_meta = true; isModifier = true; }
+            if (vkCode == VK_LCONTROL || vkCode == VK_RCONTROL || vkCode == VK_CONTROL) { isModifier = true; }
+            if (vkCode == VK_LMENU || vkCode == VK_RMENU || vkCode == VK_MENU) { isModifier = true; }
+            if (vkCode == VK_LSHIFT || vkCode == VK_RSHIFT || vkCode == VK_SHIFT) { isModifier = true; }
+            if (vkCode == VK_LWIN || vkCode == VK_RWIN) { isModifier = true; }
                                
             if (!isModifier) {
                 // A non-modifier key was pressed. Build the sequence!
                 QStringList parts;
                 
-                if (m_ctrl) parts << "Ctrl";
-                if (m_alt) parts << "Alt";
-                if (m_shift) parts << "Shift";
-                if (m_meta) parts << "Meta";
+                // Use GetAsyncKeyState to robustly check the physical key state.
+                // This fixes the bug where users hold modifiers BEFORE clicking the record button.
+                if (GetAsyncKeyState(VK_CONTROL) & 0x8000) parts << "Ctrl";
+                if (GetAsyncKeyState(VK_MENU) & 0x8000) parts << "Alt";
+                if (GetAsyncKeyState(VK_SHIFT) & 0x8000) parts << "Shift";
+                if ((GetAsyncKeyState(VK_LWIN) & 0x8000) || (GetAsyncKeyState(VK_RWIN) & 0x8000)) parts << "Meta";
                 
                 QString keyStr;
                 switch (vkCode) {
@@ -130,15 +132,7 @@ long long __stdcall HotkeyRecorder::LowLevelKeyboardProc(int nCode, unsigned lon
                 if (s_instance) {
                     emit s_instance->sequenceRecorded(finalSequence);
                 }
-                
-                m_ctrl = m_alt = m_shift = m_meta = false;
             }
-        } else if (wParam == WM_KEYUP || wParam == WM_SYSKEYUP) {
-            DWORD vkCode = p->vkCode;
-            if (vkCode == VK_LCONTROL || vkCode == VK_RCONTROL || vkCode == VK_CONTROL) m_ctrl = false;
-            if (vkCode == VK_LMENU || vkCode == VK_RMENU || vkCode == VK_MENU) m_alt = false;
-            if (vkCode == VK_LSHIFT || vkCode == VK_RSHIFT || vkCode == VK_SHIFT) m_shift = false;
-            if (vkCode == VK_LWIN || vkCode == VK_RWIN) m_meta = false;
         }
         
         // Return 1 to swallow the key press/release completely
