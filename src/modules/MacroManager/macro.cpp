@@ -10,9 +10,13 @@ void Macro::addAction(QSharedPointer<Action> action) {
     actions.append(action);
 }
 
+#include <QThread>
+#include <QCoreApplication>
+
 void Macro::execute() {
-    for (auto &a : actions)
+    for (auto &a : actions) {
         a->execute();
+    }
 
     emit executed();
 }

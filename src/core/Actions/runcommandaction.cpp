@@ -9,37 +9,24 @@ void RunCommandAction::execute()
         return;
     }
 
-    qDebug() << "Attempting to execute command:" << command;
+    qDebug() << "Attempting to execute command in new console:" << command;
 
-    // Split the command string by spaces.
-    QStringList parts = command.split(' ');
+    // Use cmd.exe to launch a new console window
+    // /c : execute string and terminate
+    // start : open a new window
+    // cmd.exe /k : open command prompt and keep it open after running the command
+    // The final structure is: cmd.exe /c start cmd.exe /k "user_command"
+    
+    QString program = "cmd.exe";
+    QStringList arguments;
+    arguments << "/c" << "start" << "cmd.exe" << "/k" << command;
 
-    if (parts.isEmpty()) {
-        return;
-    }
-
-    // The first part is the program to run.
-    QString program = parts.takeFirst(); // e.g., "cmd" or "ipconfig"
-
-    // The rest are the arguments.
-    QStringList arguments = parts;
-
-    // On Windows, if the user types "cmd", they mean "cmd.exe"
-    if (program.toLower() == "cmd") {
-        program = "cmd.exe";
-    }
-
-    // Try to run the program with its arguments.
     bool success = QProcess::startDetached(program, arguments);
 
     if (success) {
-        qDebug() << "Successfully started" << program << "with args" << arguments;
+        qDebug() << "Successfully launched console for command:" << command;
     } else {
-        qWarning() << "Failed to start" << program << "with args" << arguments;
-        qWarning() << "Attempting fallback: running the whole string (might fail).";
-
-        // Fallback for simple cases like "notepad.exe"
-        QProcess::startDetached(command);
+        qWarning() << "Failed to launch console for command:" << command;
     }
 }
 

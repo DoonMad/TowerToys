@@ -28,3 +28,9 @@ void ClipboardSyncManager::handleClipboardDataRequest(const QHttpServerRequest &
 
     responder.sendResponse(QHttpServerResponse(obj));
 }
+
+void ClipboardSyncManager::onMobileTextReceived(const QString &text)
+{
+    qDebug() << "ClipboardSyncManager: Received text from mobile.";
+    emit pcClipboardUpdateRequested(text);
+}

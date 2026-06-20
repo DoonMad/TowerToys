@@ -26,9 +26,13 @@ private:
 
     void updateDetailPane();
     void updateActionList();
+
+    bool eventFilter(QObject *watched, QEvent *event) override;
+
     void populateMacroList();
 
 private slots:
+    void onSequenceRecorded(const QString &sequence);
     void onMacroAdded(QSharedPointer<Macro> macro);
     void onMacroRemoved(QSharedPointer<Macro> macro);
 

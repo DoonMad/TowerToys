@@ -9,10 +9,6 @@
 #include <FileShare/filesharemanager.h>
 #include <ClipboardSync/clipboardsyncmanager.h>
 
-// HTTP server on port 8080
-const quint16 HTTP_PORT = 8080;
-// And the WebSocket server on port 8081
-const quint16 WEBSOCKET_PORT = 8081;
 
 LocalShareServer::LocalShareServer(QObject *parent)
     : QObject{parent}
@@ -42,6 +38,14 @@ LocalShareServer::LocalShareServer(QObject *parent)
             // Fallback if manager isn't set (send error)
             res.sendResponse(QHttpServerResponse(QHttpServerResponse::StatusCode::InternalServerError));
         }
+    });
+
+    // Route "/clipboard_push"
+    httpServer.route("/clipboard_push", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest &req) {
+        if (clipboardSyncManager) {
+            clipboardSyncManager->onMobileTextReceived(QString::fromUtf8(req.body()));
+        }
+        return QHttpServerResponse(QHttpServerResponse::StatusCode::Ok);
     });
 
     httpServer.route("/files", QHttpServerRequest::Method::Get,
@@ -86,8 +90,25 @@ void LocalShareServer::setClipboardSyncManager(ClipboardSyncManager* manager) {
 
 void LocalShareServer::startServer()
 {
-    bool wsStarted = webSocketServer->listen(QHostAddress::Any, WEBSOCKET_PORT);
-    bool httpListened = tcpServer->listen(QHostAddress::Any, HTTP_PORT);
+    m_httpPort = 8080;
+    m_wsPort = 8081;
+    
+    bool wsStarted = false;
+    bool httpListened = false;
+
+    // Try finding open ports up to 8090
+    while (!httpListened && m_httpPort <= 8090) {
+        httpListened = tcpServer->listen(QHostAddress::Any, m_httpPort);
+        if (!httpListened) {
+            m_httpPort++;
+            m_wsPort++;
+        }
+    }
+
+    if (httpListened) {
+        wsStarted = webSocketServer->listen(QHostAddress::Any, m_wsPort);
+    }
+
     bool httpBound = false;
     if (httpListened) {
         httpBound = httpServer.bind(tcpServer);
@@ -98,14 +119,14 @@ void LocalShareServer::startServer()
         if(ip == "Not Found") {
             emit serverStatusChanged(false, "Error: No network connection.");
         } else {
-            QString url = QString("http://%1:%2").arg(ip).arg(HTTP_PORT);
+            QString url = QString("http://%1:%2").arg(ip).arg(m_httpPort);
             emit serverStatusChanged(true, url);
             qDebug() << "LocalShareServer started at" << url;
         }
     } else {
         stopServer();
-        emit serverStatusChanged(false, "Error: Could not start server. Port busy?");
-        qWarning() << "LocalShareServer failed to start.";
+        emit serverStatusChanged(false, "Error: Could not start server. Ports busy?");
+        qWarning() << "LocalShareServer failed to start on ports" << m_httpPort << "and" << m_wsPort;
     }
 }
 
@@ -182,7 +203,7 @@ void LocalShareServer::onWebSocketDisconnected()
 
 QString LocalShareServer::getEmbeddedWebpage() const
 {
-    QString wsPort = QString::number(WEBSOCKET_PORT);
+    QString wsPort = QString::number(m_wsPort);
     return R"(
 <!DOCTYPE html>
 <html lang="en">
@@ -263,10 +284,30 @@ QString LocalShareServer::getEmbeddedWebpage() const
         }
         #downloadList a:hover { text-decoration: underline; }
 
+        textarea {
+            width: 100%;
+            height: 100px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px;
+            box-sizing: border-box;
+            font-family: inherit;
+            margin-bottom: 10px;
+            resize: vertical;
+        }
+
     </style>
 </head>
 <body>
     <div class="container">
+        <div class="card">
+            <h2>Clipboard Sync</h2>
+            <p style="font-size:0.9em; color:#666;">Push text directly to your PC's clipboard.</p>
+            <textarea id="clipboardInput" placeholder="Type or paste text here..."></textarea>
+            <button class="button" id="pushClipboardButton" style="background: #34c759;">Push to PC</button>
+            <div id="clipboardStatus" style="margin-top: 1em; text-align: center; font-size: 0.9em;"></div>
+        </div>
+
         <div class="card">
             <h2>Upload to PC</h2>
             <label for="fileInput" class="file-label" id="dropArea">
@@ -351,14 +392,10 @@ QString LocalShareServer::getEmbeddedWebpage() const
 
                 // Use an async function to read the file and upload
                 try {
-                    const base64Data = await readFileAsBase64(file);
-                    const response = await fetch('/upload', {
+                    // Send raw bytes!
+                    const response = await fetch('/upload?filename=' + encodeURIComponent(file.name), {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            filename: file.name,
-                            data: base64Data
-                        })
+                        body: file
                     });
                     if (!response.ok) {
                         throw new Error(`Upload failed for ${file.name}`);
@@ -376,21 +413,6 @@ QString LocalShareServer::getEmbeddedWebpage() const
             fileInput.value = null; // Clear the input
             updateFileDisplay();
         };
-
-        // Helper function to read file as Base64 using a Promise
-        function readFileAsBase64(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = (e) => {
-                    const base64Data = e.target.result.split(',')[1]; // Get just the data part
-                    resolve(base64Data);
-                };
-                reader.onerror = (e) => {
-                    reject(e);
-                };
-            });
-        }
 
         // --- Download Logic (Placeholder) ---
         const downloadList = document.getElementById('downloadList');
@@ -417,6 +439,36 @@ QString LocalShareServer::getEmbeddedWebpage() const
 
         // Load files when the page opens
         loadDownloadableFiles();
+
+        // --- Clipboard Push Logic ---
+        const pushClipboardButton = document.getElementById('pushClipboardButton');
+        const clipboardInput = document.getElementById('clipboardInput');
+        const clipboardStatus = document.getElementById('clipboardStatus');
+
+        pushClipboardButton.onclick = async (e) => {
+            e.preventDefault();
+            const text = clipboardInput.value;
+            if (!text) return;
+
+            pushClipboardButton.innerText = "Pushing...";
+            try {
+                const res = await fetch('/clipboard_push', {
+                    method: 'POST',
+                    body: text
+                });
+                if (res.ok) {
+                    clipboardStatus.textContent = "Copied to PC Clipboard!";
+                    clipboardStatus.style.color = "green";
+                    setTimeout(() => clipboardStatus.textContent = "", 3000);
+                } else {
+                    throw new Error("Failed");
+                }
+            } catch(e) {
+                clipboardStatus.textContent = "Error pushing to PC.";
+                clipboardStatus.style.color = "red";
+            }
+            pushClipboardButton.innerText = "Push to PC";
+        };
 
     </script>
 </body>

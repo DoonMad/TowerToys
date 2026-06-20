@@ -29,22 +29,24 @@ FileShareManager::FileShareManager(QObject *parent)
 }
 
 
+#include <QUrlQuery>
+
 void FileShareManager::onFileUploadRequest(const QHttpServerRequest &request)
 {
-    // Parse the JSON body
-    QJsonDocument doc = QJsonDocument::fromJson(request.body());
-    if (doc.isNull() || !doc.isObject()) {
-        qWarning() << "FileShareManager: Received bad file upload request (invalid JSON).";
-        // We don't need to send a response; the server already did.
+    // Retrieve filename from query parameters
+    QUrlQuery query(request.url().query());
+    QString fileName = query.queryItemValue("filename");
+
+    if (fileName.isEmpty()) {
+        qWarning() << "FileShareManager: Received upload request without a filename.";
         return;
     }
 
-    QJsonObject obj = doc.object();
-    QString fileName = obj["filename"].toString();
-    QString base64Data = obj["data"].toString();
+    // The body contains the raw file bytes! No Base64 or JSON parsing needed.
+    QByteArray fileData = request.body();
 
-    if (fileName.isEmpty() || base64Data.isEmpty()) {
-        qWarning() << "FileShareManager: Received bad file upload request (missing fields).";
+    if (fileData.isEmpty()) {
+        qWarning() << "FileShareManager: Received empty file upload.";
         return;
     }
 
@@ -55,9 +57,6 @@ void FileShareManager::onFileUploadRequest(const QHttpServerRequest &request)
     }
 
     QString fullFilePath = savePath + "/" + fileName;
-
-    // Decode the Base64 data
-    QByteArray fileData = QByteArray::fromBase64(base64Data.toUtf8());
 
     // Save the file
     QFile file(fullFilePath);

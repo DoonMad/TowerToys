@@ -64,6 +64,9 @@ private:
     FileShareManager* fileShareManager = nullptr;
     ClipboardSyncManager* clipboardSyncManager = nullptr;
 
+    quint16 m_httpPort = 8080;
+    quint16 m_wsPort = 8081;
+
     QList<QWebSocket*> clients;
 };
 

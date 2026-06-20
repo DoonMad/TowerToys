@@ -5,6 +5,7 @@
 #include "addactiondialog.h"
 #include <QListWidgetItem>
 #include <QVariant>
+#include "HotkeyManager/hotkeyrecorder.h"
 
 MacroManagerWidget::MacroManagerWidget(MacroManager* manager, const ModuleInfo& info, QWidget *parent)
     : QWidget(parent)
@@ -22,6 +23,9 @@ MacroManagerWidget::MacroManagerWidget(MacroManager* manager, const ModuleInfo& 
     // connect(ui->actionListWidget, &QListWidget::itemDoubleClicked, this, &MacroManagerWidget::on_actionListWidget_itemDoubleClicked);
 
     ui->rightPanel->setEnabled(false);
+
+    ui->macroHotkeyEdit->installEventFilter(this);
+    connect(HotkeyRecorder::instance(), &HotkeyRecorder::sequenceRecorded, this, &MacroManagerWidget::onSequenceRecorded);
 
     populateMacroList();
 }
@@ -195,6 +199,34 @@ void MacroManagerWidget::onMacroRemoved(QSharedPointer<Macro> macro)
 
 
 // Helper Functions
+
+bool MacroManagerWidget::eventFilter(QObject *watched, QEvent *event)
+{
+    if (watched == ui->macroHotkeyEdit) {
+        if (event->type() == QEvent::FocusIn) {
+            ui->macroHotkeyEdit->clear();
+            HotkeyRecorder::instance()->startRecording();
+        } else if (event->type() == QEvent::FocusOut) {
+            HotkeyRecorder::instance()->stopRecording();
+        }
+    }
+    return QWidget::eventFilter(watched, event);
+}
+
+void MacroManagerWidget::onSequenceRecorded(const QString &sequence)
+{
+    ui->macroHotkeyEdit->blockSignals(true);
+    ui->macroHotkeyEdit->setKeySequence(QKeySequence::fromString(sequence));
+    ui->macroHotkeyEdit->blockSignals(false);
+    
+    if (currentMacro) {
+        currentMacro->shortcut = sequence;
+        emit manager->macroEdited(currentMacro);
+    }
+    
+    HotkeyRecorder::instance()->stopRecording();
+    ui->macroHotkeyEdit->clearFocus();
+}
 
 void MacroManagerWidget::updateDetailPane()
 {

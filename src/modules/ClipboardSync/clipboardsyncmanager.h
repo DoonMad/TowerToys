@@ -23,11 +23,13 @@ public slots:
      * Responds to web clients asking for the current clipboard.
      */
     void handleClipboardDataRequest(const QHttpServerRequest &request, QHttpServerResponder &responder);
+    void onMobileTextReceived(const QString &text);
 
 private:
     QString currentClipboardText;
 
 signals:
+    void pcClipboardUpdateRequested(const QString &text);
 };
 
 #endif // CLIPBOARDSYNCMANAGER_H

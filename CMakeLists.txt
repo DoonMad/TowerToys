@@ -9,6 +9,8 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
@@ -67,6 +69,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         src/core/Actions/openurlaction.h src/core/Actions/openurlaction.cpp
         src/core/Actions/typekeystrokeaction.h src/core/Actions/typekeystrokeaction.cpp
         src/core/HotkeyManager/hotkeymanager.h src/core/HotkeyManager/hotkeymanager.cpp
+        src/core/HotkeyManager/hotkeyrecorder.h src/core/HotkeyManager/hotkeyrecorder.cpp
         src/ui/welcomewidget.h
         src/ui/welcomewidget.cpp
         src/ui/welcomewidget.ui

@@ -20,8 +20,6 @@ MacroManager::MacroManager(QObject *parent)
     connect(this, &MacroManager::macroAdded, this, &MacroManager::saveMacros);
     connect(this, &MacroManager::macroRemoved, this, &MacroManager::saveMacros);
     connect(this, &MacroManager::macroEdited, this, &MacroManager::saveMacros);
-
-    loadMacros();
 }
 
 void MacroManager::addMacro(QSharedPointer<Macro> macro){

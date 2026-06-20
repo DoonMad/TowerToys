@@ -30,12 +30,28 @@ AppController::AppController(QMainWindow *window, QObject *parent)
         emit macroManager->hotkeyStatus(macro->name, success, message);
     });
 
+    // Load macros after the connections are made
+    macroManager->loadMacros();
+
     connect(shareServer, &LocalShareServer::fileUploadRequest, fileShareManager, &FileShareManager::onFileUploadRequest);
     // connect(shareServer, &LocalShareServer::fileListRequest, fileShareManager, &FileShareManager::onFileListRequest);
     // connect(shareServer, &LocalShareServer::fileDownloadRequest, fileShareManager, &FileShareManager::onFileDownloadRequest);
 
     connect(QGuiApplication::clipboard(), &QClipboard::dataChanged, this, &AppController::onSystemClipboardChanged);
-    // connect(shareServer, &LocalShareServer::clipboardDataRequest, clipboardSyncManager, &ClipboardSyncManager::handleClipboardDataRequest);
+    
+    // Listen for clipboard updates from the phone
+    connect(clipboardSyncManager, &ClipboardSyncManager::pcClipboardUpdateRequested, this, [this](const QString &text){
+        if (clipboardSyncEnabled) {
+            // Block our own signals temporarily to avoid a ping-pong loop
+            QClipboard* clipboard = QGuiApplication::clipboard();
+            clipboard->blockSignals(true);
+            clipboard->setText(text);
+            clipboard->blockSignals(false);
+            
+            // Also notify UI or other components if needed
+            qDebug() << "AppController: PC Clipboard updated from mobile.";
+        }
+    });
 }
 
 void AppController::start()
