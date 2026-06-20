@@ -171,7 +171,20 @@ QStringList LocalShareServer::getLocalIpAddresses()
         for (const QNetworkAddressEntry &entry : interface.addressEntries()) {
             const QHostAddress &addr = entry.ip();
             if (addr.protocol() == QAbstractSocket::IPv4Protocol && !addr.isLoopback() && !addr.toString().startsWith("169.254.")) {
-                validIps.append(addr.toString());
+                
+                // Extremely common VirtualBox Host-Only subnet. Drop it so it doesn't hijack the QR code.
+                if (addr.toString().startsWith("192.168.56.")) {
+                    continue;
+                }
+                
+                // If it's a typical Home Wi-Fi or Hotspot, push it to the front so the QR code uses it!
+                if (addr.toString().startsWith("192.168.0.") || 
+                    addr.toString().startsWith("192.168.1.") || 
+                    addr.toString().startsWith("192.168.137.")) {
+                    validIps.prepend(addr.toString());
+                } else {
+                    validIps.append(addr.toString());
+                }
             }
         }
     }
@@ -186,7 +199,9 @@ QStringList LocalShareServer::getLocalIpAddresses()
         for (const QNetworkAddressEntry &entry : interface.addressEntries()) {
             const QHostAddress &addr = entry.ip();
             if (addr.protocol() == QAbstractSocket::IPv4Protocol && !addr.isLoopback() && !addr.toString().startsWith("169.254.")) {
-                validIps.append(addr.toString());
+                if (!validIps.contains(addr.toString())) {
+                    validIps.append(addr.toString());
+                }
             }
         }
     }
