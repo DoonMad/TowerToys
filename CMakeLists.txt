@@ -68,6 +68,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         src/modules/MacroManager/aigeneratordialog.h
         src/modules/MacroManager/aigeneratordialog.cpp
         src/modules/MacroManager/aigeneratordialog.ui
+        src/core/Utils/appdiscoverymanager.h src/core/Utils/appdiscoverymanager.cpp
         src/modules/MacroManager/macromanagerwidget.h src/modules/MacroManager/macromanagerwidget.cpp src/modules/MacroManager/macromanagerwidget.ui
         src/modules/MacroManager/addactiondialog.h src/modules/MacroManager/addactiondialog.cpp src/modules/MacroManager/addactiondialog.ui
         src/core/Actions/openurlaction.h src/core/Actions/openurlaction.cpp

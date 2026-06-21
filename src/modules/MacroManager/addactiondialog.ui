@@ -58,9 +58,12 @@
       <widget class="QWidget" name="pageOpenApp">
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
-         <widget class="QLineEdit" name="appPathEdit">
-          <property name="placeholderText">
-           <string>Enter path to application...</string>
+         <widget class="QComboBox" name="appPathEdit">
+          <property name="editable">
+           <bool>true</bool>
+          </property>
+          <property name="currentText">
+           <string/>
           </property>
          </widget>
         </item>

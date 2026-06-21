@@ -11,6 +11,9 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QSpinBox>
+#include <QCompleter>
+#include <QFileIconProvider>
+#include "../../core/Utils/appdiscoverymanager.h"
 
 AddActionDialog::AddActionDialog(QWidget *parent)
     : QDialog(parent)
@@ -42,6 +45,29 @@ AddActionDialog::AddActionDialog(QWidget *parent)
 
     connect(ui->actionTypeCombo, QOverload<int>::of(&QComboBox::currentIndexChanged), ui->stackedWidget, &QStackedWidget::setCurrentIndex);
     ui->stackedWidget->setCurrentIndex(0);
+
+    // Initialize App Auto-Detector
+    AppDiscoveryManager::instance()->scanInstalledApps();
+    QMap<QString, QString> apps = AppDiscoveryManager::instance()->getInstalledApps();
+    QStringList appNames = apps.keys();
+    appNames.sort();
+    
+    QFileIconProvider iconProvider;
+    for (const QString& name : appNames) {
+        QString path = apps.value(name);
+        QFileInfo fileInfo(path);
+        // Fallback to default executable icon if it fails to extract
+        QIcon icon = iconProvider.icon(fileInfo);
+        if (icon.isNull()) {
+            icon = iconProvider.icon(QFileIconProvider::Computer);
+        }
+        ui->appPathEdit->addItem(icon, name);
+    }
+    
+    // Allow users to search by typing
+    ui->appPathEdit->setInsertPolicy(QComboBox::NoInsert);
+    ui->appPathEdit->completer()->setFilterMode(Qt::MatchContains);
+    ui->appPathEdit->completer()->setCaseSensitivity(Qt::CaseInsensitive);
 }
 
 QSharedPointer<Action> AddActionDialog::getAction() const
@@ -54,9 +80,13 @@ QSharedPointer<Action> AddActionDialog::getAction() const
         // Use qSharedPointerDynamicCast to check the type and call the appropriate setter
         if (actionType == "Open App") {
             auto openApp = qSharedPointerDynamicCast<OpenAppAction>(editingAction);
-            QString path = ui->appPathEdit->text();
-            if (openApp && !path.isEmpty()) {
-                openApp->setPath(path);
+            QString pathOrName = ui->appPathEdit->currentText();
+            if (openApp && !pathOrName.isEmpty()) {
+                QMap<QString, QString> apps = AppDiscoveryManager::instance()->getInstalledApps();
+                if (apps.contains(pathOrName)) {
+                    pathOrName = apps.value(pathOrName);
+                }
+                openApp->setPath(pathOrName);
             } else { return nullptr; }
         } else if (actionType == "Open URL") {
             auto openUrl = qSharedPointerDynamicCast<OpenURLAction>(editingAction);
@@ -106,9 +136,14 @@ QSharedPointer<Action> AddActionDialog::getAction() const
     } else {
 
         if (actionType == "Open App") {
-            QString path = ui->appPathEdit->text();
-            if (path.isEmpty()) return nullptr;
-            return QSharedPointer<OpenAppAction>::create(path);
+            QString pathOrName = ui->appPathEdit->currentText();
+            if(!pathOrName.isEmpty()) {
+                QMap<QString, QString> apps = AppDiscoveryManager::instance()->getInstalledApps();
+                if (apps.contains(pathOrName)) {
+                    pathOrName = apps.value(pathOrName);
+                }
+                return QSharedPointer<OpenAppAction>::create(pathOrName);
+            }
         } else if (actionType == "Open URL") {
             QString url = ui->urlEdit->text();
             if (url.isEmpty()) return nullptr;
@@ -167,7 +202,7 @@ void AddActionDialog::setAction(QSharedPointer<Action> actionToEdit)
     editingAction = actionToEdit;
 
     // --- IMPORTANT: Clear all input fields first to prevent old values from showing ---
-    ui->appPathEdit->clear();
+    ui->appPathEdit->setCurrentText(""); // DO NOT use clear() on QComboBox, it deletes all items!
     ui->urlEdit->clear();
     ui->keystrokeEdit->clear();
     ui->vsCodeFolderPathEdit->clear();
@@ -182,7 +217,13 @@ void AddActionDialog::setAction(QSharedPointer<Action> actionToEdit)
     if (auto openApp = qSharedPointerDynamicCast<OpenAppAction>(actionToEdit)) {
         ui->actionTypeCombo->setCurrentText("Open App");
         ui->stackedWidget->setCurrentIndex(0);
-        ui->appPathEdit->setText(openApp->getPath());
+        QString path = openApp->getPath();
+        QString appName = AppDiscoveryManager::instance()->getInstalledApps().key(path);
+        if (!appName.isEmpty()) {
+            ui->appPathEdit->setCurrentText(appName);
+        } else {
+            ui->appPathEdit->setCurrentText(path);
+        }
     } else if (auto openUrl = qSharedPointerDynamicCast<OpenURLAction>(actionToEdit)) {
         ui->actionTypeCombo->setCurrentText("Open URL");
         ui->stackedWidget->setCurrentIndex(1);
@@ -223,15 +264,9 @@ void AddActionDialog::setAction(QSharedPointer<Action> actionToEdit)
 
 void AddActionDialog::on_browseAppButton_clicked()
 {
-    QString filePath = QFileDialog::getOpenFileName(
-        this,
-        "Select Application",
-        QString(), // Start in default directory
-        "Applications (*.exe);;All Files (*)"
-        );
-
-    if (!filePath.isEmpty()) {
-        ui->appPathEdit->setText(filePath);
+    QString path = QFileDialog::getOpenFileName(this, "Select Application", "", "Executables (*.exe);;All Files (*.*)");
+    if (!path.isEmpty()) {
+        ui->appPathEdit->setCurrentText(path);
     }
 }
 
