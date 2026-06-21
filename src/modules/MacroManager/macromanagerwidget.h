@@ -48,6 +48,12 @@ private slots:
 
     void onHotkeyStatus(QString macroName, bool success, QString message);
 
+    void on_generateAiMacroButton_clicked();
+    void onAiMacroGenerated(QSharedPointer<Macro> macro);
+    void onAiGenerationFailed(const QString &errorMsg);
+
+private:
+    class AIManager *aiManager;
 };
 
 #endif // MACROMANAGERWIDGET_H

@@ -3,9 +3,13 @@
 #include "macromanager.h"
 #include "macro.h"
 #include "addactiondialog.h"
+#include "addactiondialog.h"
 #include <QListWidgetItem>
 #include <QVariant>
+#include <QMessageBox>
 #include "HotkeyManager/hotkeyrecorder.h"
+#include "aigeneratordialog.h"
+#include "../../core/AI/aimanager.h"
 
 MacroManagerWidget::MacroManagerWidget(MacroManager* manager, const ModuleInfo& info, QWidget *parent)
     : QWidget(parent)
@@ -26,6 +30,10 @@ MacroManagerWidget::MacroManagerWidget(MacroManager* manager, const ModuleInfo& 
 
     ui->macroHotkeyEdit->installEventFilter(this);
     connect(HotkeyRecorder::instance(), &HotkeyRecorder::sequenceRecorded, this, &MacroManagerWidget::onSequenceRecorded);
+
+    aiManager = new AIManager(this);
+    connect(aiManager, &AIManager::macroGenerated, this, &MacroManagerWidget::onAiMacroGenerated);
+    connect(aiManager, &AIManager::generationFailed, this, &MacroManagerWidget::onAiGenerationFailed);
 
     populateMacroList();
 }
@@ -141,6 +149,46 @@ void MacroManagerWidget::on_addActionButton_clicked()
             emit manager->macroEdited(currentMacro);
         }
     }
+}
+
+void MacroManagerWidget::on_generateAiMacroButton_clicked()
+{
+    AIGeneratorDialog dialog(this);
+    if (dialog.exec() == QDialog::Accepted) {
+        QString prompt = dialog.getPrompt();
+        if (!prompt.isEmpty()) {
+            if (!aiManager->generateMacro(prompt)) {
+                QMessageBox::warning(this, "API Key Missing", "Please add your Gemini API Key in the Settings tab.");
+            } else {
+                ui->generateAiMacroButton->setText("Generating...");
+                ui->generateAiMacroButton->setEnabled(false);
+            }
+        }
+    }
+}
+
+void MacroManagerWidget::onAiMacroGenerated(QSharedPointer<Macro> macro)
+{
+    ui->generateAiMacroButton->setText("Generate with AI ✨");
+    ui->generateAiMacroButton->setEnabled(true);
+
+    if (macro) {
+        // Automatically add the generated macro to the manager
+        manager->addMacro(macro);
+        
+        // Select it in the list (onMacroAdded will have already created the item)
+        // Let's just find the last item and select it
+        ui->macroListWidget->setCurrentRow(ui->macroListWidget->count() - 1);
+        
+        QMessageBox::information(this, "AI Macro Generated", "The AI has generated a macro for you! Please review the actions, update any file paths if necessary, and assign a hotkey.");
+    }
+}
+
+void MacroManagerWidget::onAiGenerationFailed(const QString &errorMsg)
+{
+    ui->generateAiMacroButton->setText("Generate with AI ✨");
+    ui->generateAiMacroButton->setEnabled(true);
+    QMessageBox::critical(this, "AI Generation Failed", "Failed to generate macro:\n" + errorMsg);
 }
 
 void MacroManagerWidget::on_executeMacroButton_clicked()
