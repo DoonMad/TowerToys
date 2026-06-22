@@ -69,14 +69,25 @@
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="apiKeyLineEdit">
-        <property name="echoMode">
-         <enum>QLineEdit::Password</enum>
-        </property>
-        <property name="placeholderText">
-         <string>Enter your Gemini API Key here...</string>
-        </property>
-       </widget>
+       <layout class="QHBoxLayout" name="apiKeyLayout">
+        <item>
+         <widget class="QLineEdit" name="apiKeyLineEdit">
+          <property name="echoMode">
+           <enum>QLineEdit::Password</enum>
+          </property>
+          <property name="placeholderText">
+           <string>Enter your Gemini API Key here...</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="saveApiKeyButton">
+          <property name="text">
+           <string>Save</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
       <item>
        <widget class="QLabel" name="apiHintLabel">

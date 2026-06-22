@@ -25,6 +25,9 @@ public:
     QSharedPointer<Action> getAction() const;
     void setAction(QSharedPointer<Action> actionToEdit);
 
+protected:
+    bool eventFilter(QObject *watched, QEvent *event) override;
+
 private slots:
     void on_browseAppButton_clicked();
     void on_browseVSCodeFolderButton_clicked();

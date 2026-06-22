@@ -16,6 +16,12 @@
   <layout class="QVBoxLayout" name="verticalLayout_3">
    <item>
     <widget class="QLabel" name="titleLabel">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="font">
       <font>
        <pointsize>12</pointsize>
@@ -30,6 +36,12 @@
    </item>
    <item>
     <widget class="QLabel" name="descriptionLabel">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="text">
       <string>Description label goes here.</string>
      </property>
@@ -39,15 +51,17 @@
     </widget>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_3">
-     <item>
+    <widget class="QSplitter" name="mainSplitter">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
       <widget class="QWidget" name="leftPanel" native="true">
-       <property name="maximumSize">
-        <size>
-         <width>250</width>
-         <height>16777215</height>
-        </size>
-       </property>
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
          <widget class="QLabel" name="macrosLabel">
@@ -82,15 +96,10 @@
           <property name="text">
            <string>Generate with AI ✨</string>
           </property>
-          <property name="styleSheet">
-           <string>font-weight: bold; color: #4285F4;</string>
-          </property>
          </widget>
         </item>
        </layout>
       </widget>
-     </item>
-     <item>
       <widget class="QWidget" name="rightPanel" native="true">
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
@@ -186,8 +195,7 @@
         </item>
        </layout>
       </widget>
-     </item>
-    </layout>
+    </widget>
    </item>
   </layout>
  </widget>

@@ -12,7 +12,7 @@
 
 #include <QSharedPointer>
 #include <QVBoxLayout>
-#include <QHBoxLayout>
+#include <QSplitter>
 #include <QStackedWidget>
 #include <QLabel>
 #include <QHash>
@@ -76,15 +76,17 @@ void MainWindow::updateButtonSelection(QPushButton* selectedButton)
 
 // Function to set up the dynamic UI layout
 void MainWindow::setupDynamicUI() {
-    // Central Widget Setup
-    QWidget *centralWidgetContainer = new QWidget(this); // Container
-    QHBoxLayout *mainLayout = new QHBoxLayout(centralWidgetContainer); // Layout for container
-    mainLayout->setContentsMargins(0,0,0,0);
-    mainLayout->setSpacing(0);
+    QWidget* centralWidgetContainer = new QWidget(this);
+    QVBoxLayout* wrapperLayout = new QVBoxLayout(centralWidgetContainer);
+    wrapperLayout->setContentsMargins(0, 0, 0, 0);
 
-    // Side Panel Setup
-    QFrame *sidePanel = new QFrame(centralWidgetContainer);
-    sidePanel->setFixedWidth(200);
+    QSplitter* mainSplitter = new QSplitter(Qt::Horizontal, centralWidgetContainer);
+    wrapperLayout->addWidget(mainSplitter);
+
+    // 2. Setup Left Sidebar Panel
+    QFrame* sidePanel = new QFrame(mainSplitter);
+    sidePanel->setObjectName("sidePanel");
+    sidePanel->setMinimumWidth(200);
     QVBoxLayout *sideLayout = new QVBoxLayout(sidePanel); // Layout for sidePanel
     sideLayout->setContentsMargins(5,5,5,5);
     sideLayout->setSpacing(5);
@@ -126,12 +128,7 @@ void MainWindow::setupDynamicUI() {
         // Set Style and Size
         button->setFixedHeight(40);
         // setToolButtonStyle might depend on the specific style applied or require <QToolButton>
-        // Relying on StyleSheet for alignment is more robust:
-        button->setStyleSheet(
-            "QPushButton { text-align: left; padding-left: 8px; padding-top: 4px; padding-bottom: 4px; border: 1px solid transparent; background-color: transparent; border-radius: 10px  }" // Explicitly set default colors
-            "QPushButton:checked { background-color: #007bff; border: 1px solid #0056b3; color: white; }"
-            "QPushButton:hover:!checked { background-color: #d1d5db; border: 1px solid #adb5bd; color: black; }"
-            );
+        button->setProperty("class", "sidebarButton");
 
         // Connect Button Click
         connect(button, &QPushButton::clicked, this, [this, moduleKeyName, button]() {
@@ -148,14 +145,12 @@ void MainWindow::setupDynamicUI() {
     buttonLayout->addStretch(1); // Push buttons up within their container
     
     // Add Settings Button at the bottom
-    QPushButton* settingsBtn = new QPushButton("⚙ Settings", buttonContainer);
+    QPushButton* settingsBtn = new QPushButton("Settings", buttonContainer);
+    settingsBtn->setIcon(QIcon(":/resources/icons/settings.svg"));
+    settingsBtn->setIconSize(QSize(24, 24));
     settingsBtn->setCheckable(true);
     settingsBtn->setFixedHeight(40);
-    settingsBtn->setStyleSheet(
-        "QPushButton { text-align: left; padding-left: 8px; padding-top: 4px; padding-bottom: 4px; border: 1px solid transparent; background-color: transparent; border-radius: 10px }"
-        "QPushButton:checked { background-color: #007bff; border: 1px solid #0056b3; color: white; }"
-        "QPushButton:hover:!checked { background-color: #d1d5db; border: 1px solid #adb5bd; color: black; }"
-    );
+    settingsBtn->setProperty("class", "sidebarButton");
     connect(settingsBtn, &QPushButton::clicked, this, [this, settings, settingsBtn]() {
         stackWidget->setCurrentWidget(settings);
         updateButtonSelection(settingsBtn);
@@ -168,8 +163,11 @@ void MainWindow::setupDynamicUI() {
     sideLayout->setStretchFactor(buttonContainer, 1); // Allow button container to stretch
 
     // 7. Final Layout Assembly
-    mainLayout->addWidget(sidePanel);
-    mainLayout->addWidget(stackWidget, 1); // Give stack widget horizontal stretch factor
+    mainSplitter->addWidget(sidePanel);
+    mainSplitter->addWidget(stackWidget);
+    mainSplitter->setStretchFactor(1, 1); // Give stack widget horizontal stretch factor
+    mainSplitter->setCollapsible(0, false); // Don't allow sidebar to fully collapse
+    mainSplitter->setCollapsible(1, false);
 
     // 8. Set Central Widget
     setCentralWidget(centralWidgetContainer); // Apply the whole layout

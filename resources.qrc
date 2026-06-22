@@ -5,5 +5,7 @@
         <file>resources/icons/clipboard.png</file>
         <file>resources/icons/macro.png</file>
         <file>resources/icons/share.png</file>
+        <file>resources/icons/settings.svg</file>
+        <file>resources/styles/style.qss</file>
     </qresource>
 </RCC>

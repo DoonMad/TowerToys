@@ -21,7 +21,7 @@ SettingsWidget::SettingsWidget(QWidget *parent) :
 
     connect(ui->styleComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &SettingsWidget::onStyleComboBoxCurrentIndexChanged);
     connect(ui->startupCheckBox, &QCheckBox::toggled, this, &SettingsWidget::onStartupCheckBoxToggled);
-    connect(ui->apiKeyLineEdit, &QLineEdit::textChanged, this, &SettingsWidget::onApiKeyChanged);
+    connect(ui->saveApiKeyButton, &QPushButton::clicked, this, &SettingsWidget::onSaveApiKeyClicked);
 }
 
 SettingsWidget::~SettingsWidget()
@@ -38,8 +38,9 @@ void SettingsWidget::onStartupCheckBoxToggled(bool checked)
     qDebug() << "Saved startOnStartup setting:" << checked;
 }
 
-void SettingsWidget::onApiKeyChanged(const QString &text)
+void SettingsWidget::onSaveApiKeyClicked()
 {
+    QString text = ui->apiKeyLineEdit->text();
     QSettings settings;
     settings.setValue("geminiApiKey", text);
     qDebug() << "Saved Gemini API Key";

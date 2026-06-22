@@ -68,6 +68,19 @@ AddActionDialog::AddActionDialog(QWidget *parent)
     ui->appPathEdit->setInsertPolicy(QComboBox::NoInsert);
     ui->appPathEdit->completer()->setFilterMode(Qt::MatchContains);
     ui->appPathEdit->completer()->setCaseSensitivity(Qt::CaseInsensitive);
+
+    // Make clicking the text area open the dropdown
+    if (ui->appPathEdit->lineEdit()) {
+        ui->appPathEdit->lineEdit()->installEventFilter(this);
+    }
+}
+
+bool AddActionDialog::eventFilter(QObject *watched, QEvent *event)
+{
+    if (watched == ui->appPathEdit->lineEdit() && event->type() == QEvent::MouseButtonPress) {
+        ui->appPathEdit->showPopup();
+    }
+    return QDialog::eventFilter(watched, event);
 }
 
 QSharedPointer<Action> AddActionDialog::getAction() const

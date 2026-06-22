@@ -1,0 +1,222 @@
+/* Global Variables and Defaults */
+* {
+    color: #ffffff;
+    font-family: "Segoe UI Variable", "Segoe UI", sans-serif;
+    font-size: 13px;
+}
+
+/* Main Backgrounds */
+QMainWindow, QDialog, QStackedWidget, QWidget#centralwidget {
+    background-color: #202020;
+}
+
+QWidget {
+    background-color: transparent;
+}
+
+/* Remove default frame borders that bloat the UI */
+QFrame {
+    border: none;
+}
+
+/* Specific Sidebar Styling */
+QFrame#sidePanel {
+    background-color: #1c1c1c;
+    border-right: 1px solid #2d2d2d;
+}
+
+/* Sidebar Navigation Buttons */
+QPushButton[class="sidebarButton"] {
+    background-color: transparent;
+    border: none;
+    text-align: left;
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin: 2px 4px;
+    color: #e0e0e0;
+}
+
+QPushButton[class="sidebarButton"]:hover {
+    background-color: rgba(255, 255, 255, 15);
+}
+
+QPushButton[class="sidebarButton"]:checked {
+    background-color: rgba(255, 255, 255, 20);
+    color: #60cdff;
+    font-weight: bold;
+}
+
+/* Standard Buttons (Fluent Style) */
+QPushButton {
+    background-color: #333333;
+    border: 1px solid #3d3d3d;
+    border-bottom: 1px solid #292929;
+    border-radius: 4px;
+    padding: 5px 10px;
+}
+
+QPushButton:hover {
+    background-color: #383838;
+}
+
+QPushButton:pressed {
+    background-color: #2d2d2d;
+    border: 1px solid #3d3d3d;
+    color: #b3b3b3;
+}
+
+/* Primary Action Buttons (e.g. Generate with AI) */
+QPushButton#generateAiMacroButton {
+    background-color: #60cdff;
+    color: #000000;
+    border: 1px solid #60cdff;
+    border-bottom: 1px solid #4899be;
+    font-weight: bold;
+}
+
+QPushButton#generateAiMacroButton:hover {
+    background-color: #55b7e5;
+}
+
+QPushButton#generateAiMacroButton:pressed {
+    background-color: #4da5ce;
+}
+
+/* Input Fields */
+QLineEdit, QTextEdit, QPlainTextEdit, QSpinBox, QComboBox, QKeySequenceEdit {
+    background-color: #2d2d2d;
+    border: 1px solid #363636;
+    border-bottom: 1px solid #8a8a8a;
+    border-radius: 4px;
+    padding: 6px;
+    selection-background-color: #60cdff;
+    selection-color: #000000;
+}
+
+QLineEdit:focus, QTextEdit:focus, QPlainTextEdit:focus, QSpinBox:focus, QComboBox:focus, QKeySequenceEdit:focus {
+    border-bottom: 2px solid #60cdff;
+    background-color: #1e1e1e;
+}
+
+/* Lists */
+QListWidget {
+    background-color: #2b2b2b;
+    border: 1px solid #363636;
+    border-radius: 6px;
+    outline: none;
+}
+
+QListWidget::item {
+    padding: 3px 6px;
+    border-radius: 4px;
+    margin: 1px 2px;
+}
+
+QListWidget::item:hover {
+    background-color: rgba(255, 255, 255, 10);
+}
+
+QListWidget::item:selected {
+    background-color: rgba(255, 255, 255, 15);
+    border-left: 3px solid #60cdff;
+}
+
+/* ComboBox Dropdown */
+QComboBox::drop-down {
+    border: none;
+    width: 24px;
+}
+
+QComboBox::down-arrow {
+    image: none;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 5px solid #a0a0a0;
+    margin-right: 6px;
+}
+
+QComboBox QAbstractItemView {
+    background-color: #2d2d2d;
+    border: 1px solid #363636;
+    border-radius: 4px;
+    selection-background-color: #444444;
+    outline: none;
+}
+
+/* Settings Cards (Group Boxes) */
+QGroupBox {
+    background-color: #2b2b2b;
+    border: 1px solid #363636;
+    border-radius: 8px;
+    margin-top: 25px; /* Leave space for title */
+    padding: 10px;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    padding: 0 2px;
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+/* Splitter */
+QSplitter::handle {
+    background-color: #2a2a2a;
+    width: 4px;
+}
+
+QSplitter::handle:hover {
+    background-color: #60cdff;
+}
+
+/* Scrollbars */
+QScrollBar:vertical {
+    border: none;
+    background-color: transparent;
+    width: 12px;
+    margin: 0px;
+}
+
+QScrollBar::handle:vertical {
+    background-color: #555555;
+    min-height: 20px;
+    border-radius: 6px;
+    margin: 2px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background-color: #777777;
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    height: 0px;
+}
+
+QScrollBar:horizontal {
+    border: none;
+    background-color: transparent;
+    height: 12px;
+    margin: 0px;
+}
+
+QScrollBar::handle:horizontal {
+    background-color: #555555;
+    min-width: 20px;
+    border-radius: 6px;
+    margin: 2px;
+}
+
+QScrollBar::handle:horizontal:hover {
+    background-color: #777777;
+}
+
+QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {
+    width: 0px;
+}
+
+/* Labels */
+QLabel {
+    color: #e0e0e0;
+}
