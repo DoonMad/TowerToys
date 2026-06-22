@@ -18,6 +18,11 @@ QWidget {
 QFrame {
     border: none;
 }
+QMainWindow::separator {
+    background: transparent;
+    width: 0px;
+    height: 0px;
+}
 
 /* Specific Sidebar Styling */
 QFrame#sidePanel {
@@ -76,10 +81,12 @@ QPushButton#generateAiMacroButton {
 
 QPushButton#generateAiMacroButton:hover {
     background-color: #55b7e5;
+    color: #000000;
 }
 
 QPushButton#generateAiMacroButton:pressed {
     background-color: #4da5ce;
+    color: #000000;
 }
 
 /* Input Fields */
@@ -89,6 +96,7 @@ QLineEdit, QTextEdit, QPlainTextEdit, QSpinBox, QComboBox, QKeySequenceEdit {
     border-bottom: 1px solid #8a8a8a;
     border-radius: 4px;
     padding: 6px;
+    padding-right: 20px;
     selection-background-color: #60cdff;
     selection-color: #000000;
 }
@@ -107,9 +115,9 @@ QListWidget {
 }
 
 QListWidget::item {
-    padding: 3px 6px;
+    padding: 1px 4px;
     border-radius: 4px;
-    margin: 1px 2px;
+    margin: 1px 1px;
 }
 
 QListWidget::item:hover {
@@ -125,6 +133,7 @@ QListWidget::item:selected {
 QComboBox::drop-down {
     border: none;
     width: 24px;
+    background: transparent;
 }
 
 QComboBox::down-arrow {
@@ -141,6 +150,14 @@ QComboBox QAbstractItemView {
     border-radius: 4px;
     selection-background-color: #444444;
     outline: none;
+}
+
+QLabel#descriptionLabel {
+    background-color: #2b2b2b;
+    border: 1px solid #363636;
+    border-radius: 6px;
+    padding: 8px;
+    color: #cccccc;
 }
 
 /* Settings Cards (Group Boxes) */
@@ -219,4 +236,28 @@ QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {
 /* Labels */
 QLabel {
     color: #e0e0e0;
+}
+
+/* Context Menus (Tray Icon Menu) */
+QMenu {
+    background-color: #2b2b2b;
+    border: 1px solid #363636;
+    border-radius: 4px;
+    padding: 4px;
+}
+
+QMenu::item {
+    background-color: transparent;
+    padding: 6px 24px;
+    border-radius: 4px;
+    color: #e0e0e0;
+}
+
+QMenu::item:selected {
+    background-color: rgba(255, 255, 255, 15);
+    color: #ffffff;
+}
+
+QMenu::item:disabled {
+    color: #666666;
 }

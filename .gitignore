@@ -85,3 +85,4 @@ CMakeLists.txt.user*
 .vscode
 .cache
 .qtcreator
+release_deploy/

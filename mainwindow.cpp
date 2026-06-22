@@ -86,13 +86,15 @@ void MainWindow::setupDynamicUI() {
     // 2. Setup Left Sidebar Panel
     QFrame* sidePanel = new QFrame(mainSplitter);
     sidePanel->setObjectName("sidePanel");
-    sidePanel->setMinimumWidth(200);
+    sidePanel->setMinimumWidth(220);
+    sidePanel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     QVBoxLayout *sideLayout = new QVBoxLayout(sidePanel); // Layout for sidePanel
     sideLayout->setContentsMargins(5,5,5,5);
     sideLayout->setSpacing(5);
 
     // Stacked Widget Setup
     stackWidget = new QStackedWidget(centralWidgetContainer); // Parent it and assign to member
+    stackWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
     // Add Welcome Page
     QWidget *welcomePage = new WelcomeWidget(stackWidget);

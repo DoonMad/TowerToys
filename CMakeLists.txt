@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(TowerToys VERSION 0.1 LANGUAGES CXX)
+project(TowerToys VERSION 1.1.0 LANGUAGES CXX)
 
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
@@ -49,7 +49,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     find_package(Qt6 REQUIRED COMPONENTS Core)
     find_package(Qt6 REQUIRED COMPONENTS Core)
     find_package(Qt6 REQUIRED COMPONENTS Core)
-    find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Network HttpServer)
+    find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Network HttpServer Svg)
     qt_add_executable(TowerToys
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
@@ -127,6 +127,7 @@ target_link_libraries(TowerToys PRIVATE
     Qt6::Core
     Qt${QT_VERSION_MAJOR}::Network
     Qt${QT_VERSION_MAJOR}::HttpServer
+    Qt${QT_VERSION_MAJOR}::Svg
 )
 target_link_libraries(TowerToys PRIVATE Qt6::Core)
 target_link_libraries(TowerToys PRIVATE Qt6::Core)

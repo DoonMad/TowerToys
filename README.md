@@ -18,7 +18,7 @@ Core principles:
 
 ---
 
-## Features (v1.0)
+## Features (v1.1.0)
 
 ### 🧩 Modular Architecture
 - PowerToys-style modular system
@@ -35,6 +35,11 @@ Core principles:
   - Open VS Code Folder
   - Open Folder
   - Run Command
+  - Delay
+- **✨ AI Macro Generation (Powered by Gemini):**
+  - Generate complete automation sequences dynamically using natural language prompts.
+  - Understands context (recognizes website URLs, specific software, and dynamically resolves user directory paths).
+  - Built-in security guardrails to ensure output strictly matches macro formatting.
 - Assign global hotkeys (shortcuts) to trigger macros
 - Edit existing macros and actions
 - Macros persist across application restarts
@@ -89,14 +94,13 @@ Product website and documentation:
 - **Mobile:** Kotlin, Android  
 - **Website:** React (Vite), Tailwind CSS  
 
----
 
 ## Installation ⬇️
 
 ### 🖥 Desktop Application (Windows)
 Download the latest Windows installer:
 
-- **[Download TowerToys Desktop (v1.0.0)](https://github.com/DoonMad/TowerToys/releases/latest)**
+- **[Download TowerToys Desktop (v1.1.0)](https://github.com/DoonMad/TowerToys/releases/latest)**
 
 ---
 
@@ -104,21 +108,6 @@ Download the latest Windows installer:
 For clipboard sync, install the Android companion app:
 
 - **[TowerToys Companion – APK Download](https://github.com/DoonMad/TowerToys-Companion/releases/latest)**
-
-
-
----
-
-## Building 🔨
-
-Requirements:
-- Qt 6 (tested with 6.9.3 MinGW)
-- CMake
-- `qrcodegen` and `QHotkey` libraries (included in `lib/`)
-
-Steps:
-1. Open `CMakeLists.txt` in Qt Creator
-2. Build using a Desktop Kit
 
 ---
 
@@ -138,11 +127,6 @@ Steps:
 
 ---
 
-## Known Issues (v1.0) ⚠️
+## Known Issues (v1.1.0) ⚠️
 
-- Phone → PC clipboard sync is not implemented (Android system app limitation)
-- Type Keystroke action currently logs actions but does not simulate global keystrokes
-- Console-based commands run in the launch console (e.g., Qt Creator output) instead of a new window
-
----
-
+- Phone → PC clipboard sync is not fully automated natively due to Android background limitations (requires Companion App).

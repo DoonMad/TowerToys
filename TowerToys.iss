@@ -2,18 +2,18 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "TowerToys"
-#define MyAppVersion "1.0.0"
+#define MyAppVersion "1.1.0"
 #define MyAppPublisher "DoonMad"
 #define MyAppURL "https://github.com/DoonMad/TowerToys"
 #define MyAppExeName "TowerToys.exe"
-#define MyAppAssocName MyAppName + "-1.0.0-setup"
+#define MyAppAssocName MyAppName + "-1.1.0-setup"
 #define MyAppAssocExt ".myp"
 #define MyAppAssocKey StringChange(MyAppAssocName, " ", "") + MyAppAssocExt
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
-AppId={{39649CFA-5E37-4FC4-BC4D-8E62559677FE}
+AppId={39649CFA-5E37-4FC4-BC4D-8E62559677FE}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 ;AppVerName={#MyAppName} {#MyAppVersion}
@@ -36,7 +36,7 @@ DisableProgramGroupPage=yes
 ; Uncomment the following line to run in non administrative install mode (install for current user only).
 ;PrivilegesRequired=lowest
 OutputDir=A:\Programming\Projects\TowerToys\installer
-OutputBaseFilename=TowerToys-1.0.0-setup
+OutputBaseFilename=TowerToys-1.1.0-setup
 SetupIconFile=A:\Programming\Projects\TowerToys\icon.ico
 SolidCompression=yes
 WizardStyle=modern
@@ -48,8 +48,8 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "A:\Programming\Projects\TowerToys\build\Desktop_Qt_6_9_3_MinGW_64_bit-Release\release\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "A:\Programming\Projects\TowerToys\build\Desktop_Qt_6_9_3_MinGW_64_bit-Release\release\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "A:\Programming\Projects\TowerToys\release_deploy\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "A:\Programming\Projects\TowerToys\release_deploy\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Registry]
