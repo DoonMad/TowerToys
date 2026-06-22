@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "src/core/Actions/actionregistry.h"
 
 #include <QApplication>
 #include <QStyleFactory>
@@ -10,6 +11,9 @@ int main(int argc, char *argv[])
 {
     QCoreApplication::setOrganizationName("DoonMadOrg");
     QCoreApplication::setApplicationName("TowerToys");
+
+    // Initialize the action registry
+    ActionRegistry::registerDefaultActions();
 
     // Single Instance Check
     QSharedMemory shared("TowerToys_SingleInstance_Key");

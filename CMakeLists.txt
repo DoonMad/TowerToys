@@ -93,6 +93,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         src/core/Actions/openfolderaction.h src/core/Actions/openfolderaction.cpp
         src/core/Actions/runcommandaction.h src/core/Actions/runcommandaction.cpp
         src/core/Actions/delayaction.h src/core/Actions/delayaction.cpp
+        src/core/Actions/actionregistry.cpp src/core/Actions/actionregistry.h
         src/ui/settingswidget.h
         src/ui/settingswidget.cpp
         src/ui/settingswidget.ui
